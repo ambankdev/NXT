@@ -35,6 +35,23 @@ export default function Index() {
   // Card application dialog state
   const [applicationCard, setApplicationCard] = useState<{ name: string } | null>(null);
 
+  // Carousel drag-to-slide state
+  const carouselDragRef = useRef<{ startX: number; isDragging: boolean }>({ startX: 0, isDragging: false });
+
+  const handleCarouselPointerDown = (e: React.PointerEvent) => {
+    carouselDragRef.current = { startX: e.clientX, isDragging: true };
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const handleCarouselPointerEnd = (e: React.PointerEvent) => {
+    if (!carouselDragRef.current.isDragging) return;
+    const diff = e.clientX - carouselDragRef.current.startX;
+    carouselDragRef.current.isDragging = false;
+    if (Math.abs(diff) > 50) {
+      setCurrentCardIdx((i) => (diff < 0 ? (i + 1) % 4 : (i - 1 + 4) % 4));
+    }
+  };
+
   // Check cookie consent on mount
   useEffect(() => {
     const cookieConsent = localStorage.getItem('nxt-cookie-consent');
@@ -646,7 +663,7 @@ export default function Index() {
           transform: scale(1.15) rotate(-6deg);
         }
         .credit-card-btn {
-          align-self: flex-start;
+          align-self: center;
           padding: 10px 26px;
           border-radius: 14px;
           font-weight: 700;
@@ -675,7 +692,11 @@ export default function Index() {
           height: 620px;
           margin: 0 auto;
           max-width: 1100px;
+          cursor: grab;
+          touch-action: pan-y;
+          user-select: none;
         }
+        .card-carousel-stage:active { cursor: grabbing; }
         .card-carousel-slide {
           position: absolute;
           top: 0;
@@ -1000,7 +1021,12 @@ export default function Index() {
                   onMouseEnter={() => setCardCarouselPaused(true)}
                   onMouseLeave={() => setCardCarouselPaused(false)}
                 >
-                  <div className="card-carousel-stage">
+                  <div
+                    className="card-carousel-stage"
+                    onPointerDown={handleCarouselPointerDown}
+                    onPointerUp={handleCarouselPointerEnd}
+                    onPointerCancel={handleCarouselPointerEnd}
+                  >
                     {creditCards.map((card, idx) => {
                       const total = creditCards.length;
                       const offset = (idx - currentCardIdx + total) % total;

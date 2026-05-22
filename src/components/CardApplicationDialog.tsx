@@ -19,7 +19,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -28,7 +27,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
       setFullName('');
       setEmail('');
       setPhone('');
-      setReason('');
       setErrors({});
       setSubmitting(false);
     }
@@ -37,7 +35,7 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
   const validate = () => {
     const next: Record<string, string> = {};
     if (fullName.trim().length < 2) next.fullName = 'Please enter your full name';
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) next.email = 'Please enter a valid email';
+    if (email.trim() && !/^\S+@\S+\.\S+$/.test(email.trim())) next.email = 'Please enter a valid email';
     if (!/^[\d+\-()\s]{6,}$/.test(phone.trim())) next.phone = 'Please enter a valid phone number';
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -51,9 +49,8 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
     const payload = {
       card: card.name,
       fullName: fullName.trim(),
-      email: email.trim(),
+      email: email.trim() || null,
       phone: phone.trim(),
-      reason: reason.trim() || null,
       submittedAt: new Date().toISOString(),
     };
 
@@ -109,14 +106,13 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
               style={{ borderColor: errors.fullName ? '#dc2626' : '#cbd5e1' }}
               disabled={submitting}
               autoComplete="name"
-              placeholder="Jane Doe"
             />
             {errors.fullName && <p className="text-xs text-red-600 mt-1">{errors.fullName}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1.5" style={{ color: '#182C64' }}>
-              Email
+              Email <span className="text-slate-400 font-normal">(optional)</span>
             </label>
             <input
               type="email"
@@ -126,7 +122,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
               style={{ borderColor: errors.email ? '#dc2626' : '#cbd5e1' }}
               disabled={submitting}
               autoComplete="email"
-              placeholder="you@example.com"
             />
             {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email}</p>}
           </div>
@@ -143,34 +138,20 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
               style={{ borderColor: errors.phone ? '#dc2626' : '#cbd5e1' }}
               disabled={submitting}
               autoComplete="tel"
-              placeholder="+961 70 000 000"
             />
             {errors.phone && <p className="text-xs text-red-600 mt-1">{errors.phone}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1.5" style={{ color: '#182C64' }}>
-              Reason <span className="text-slate-400 font-normal">(optional)</span>
-            </label>
-            <textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              rows={3}
-              className={`${inputClass} resize-none`}
-              style={{ borderColor: '#cbd5e1' }}
+          <div className="flex justify-center pt-2">
+            <button
+              type="submit"
               disabled={submitting}
-              placeholder="What are you looking for in this card?"
-            />
+              className="text-white font-bold text-sm px-8 py-2 rounded-lg transition-all duration-300 shadow-md disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-lg hover:scale-[1.03]"
+              style={{ background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' }}
+            >
+              {submitting ? '…' : 'NXT'}
+            </button>
           </div>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full text-white font-bold py-2.5 rounded-xl transition-all duration-300 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-xl hover:scale-[1.01]"
-            style={{ background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' }}
-          >
-            {submitting ? 'Submitting…' : 'Submit application'}
-          </button>
         </form>
       </DialogContent>
     </Dialog>
