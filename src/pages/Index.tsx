@@ -93,13 +93,13 @@ export default function Index() {
         const videoHeight = window.innerHeight;
         const downloadSectionHeight = document.getElementById('download-section')?.offsetHeight || 0;
         window.scrollTo({ top: videoHeight + downloadSectionHeight, behavior: 'smooth' });
-      } else if (sectionId === 'pricing-section' || sectionId === 'features-section') {
+      } else if (sectionId === 'credit-cards-section' || sectionId === 'features-section') {
         const videoHeight = window.innerHeight;
         const downloadSectionHeight = document.getElementById('download-section')?.offsetHeight || 0;
         let scrollPosition = videoHeight + downloadSectionHeight + window.innerHeight + window.innerHeight;
         if (sectionId === 'features-section') {
-          const pricingElement = document.getElementById('pricing-section');
-          if (pricingElement) scrollPosition += pricingElement.offsetHeight;
+          const cardsElement = document.getElementById('credit-cards-section');
+          if (cardsElement) scrollPosition += cardsElement.offsetHeight;
         }
         scrollPosition -= headerHeight;
         window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
@@ -181,6 +181,75 @@ export default function Index() {
       </div>
     </div>
   );
+
+  const creditCards = [
+    {
+      name: "NXT Classic",
+      tagline: "Your everyday companion",
+      image: "/assets/images/cards/card-classic.png",
+      benefits: [
+        "Worldwide Visa acceptance",
+        "Contactless payments",
+        "Real-time spend notifications",
+        "24/7 fraud protection",
+      ],
+    },
+    {
+      name: "NXT Platinum",
+      tagline: "Step up your spending",
+      image: "/assets/images/cards/card-platinum.png",
+      benefits: [
+        "Up to 1% cashback on every swipe",
+        "Higher daily limits",
+        "Free travel insurance",
+        "Priority customer support",
+      ],
+    },
+    {
+      name: "NXT Titanium",
+      tagline: "Built for the everyday traveler",
+      image: "/assets/images/cards/card-titanium.png",
+      benefits: [
+        "2% cashback on dining & travel",
+        "Airport lounge access",
+        "Extended product warranty",
+        "Concierge service",
+      ],
+    },
+    {
+      name: "NXT Infinite",
+      tagline: "Limitless privileges, no compromise",
+      image: "/assets/images/cards/card-infinite.png",
+      benefits: [
+        "Unlimited cashback up to 3%",
+        "Global 24/7 Visa Infinite concierge",
+        "Unlimited premium lounge access worldwide",
+        "Luxury hotel collection perks & room upgrades",
+      ],
+    },
+  ];
+
+  const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rotateX = ((y - cy) / cy) * -8;
+    const rotateY = ((x - cx) / cx) * 12;
+    el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`;
+    const shine = el.querySelector('.credit-card-shine') as HTMLElement | null;
+    if (shine) {
+      const px = (x / rect.width) * 100;
+      const py = (y / rect.height) * 100;
+      shine.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 55%)`;
+    }
+  };
+
+  const handleCardReset = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)';
+  };
 
   const alternatingFeatures = [
     {
@@ -451,6 +520,134 @@ export default function Index() {
           .cookie-banner-buttons { flex-direction: row; }
           .cookie-btn { padding: 8px 12px; font-size: 0.7rem; }
         }
+        /* Credit Cards Section */
+        .credit-card-tile {
+          position: relative;
+          background: white;
+          border-radius: 24px;
+          padding: 28px;
+          border: 1px solid rgba(46, 116, 234, 0.15);
+          box-shadow: 0 10px 30px -10px rgba(24, 44, 100, 0.15);
+          transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .credit-card-tile::before {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          border-radius: 24px;
+          background: linear-gradient(135deg, rgba(140, 21, 233, 0.5) 0%, rgba(47, 255, 243, 0.6) 50%, rgba(46, 116, 234, 0.7) 100%);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          z-index: -1;
+        }
+        .credit-card-tile:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 30px 60px -15px rgba(46, 116, 234, 0.35);
+          border-color: transparent;
+        }
+        .credit-card-tile:hover::before { opacity: 1; }
+        .credit-card-image-wrap {
+          position: relative;
+          margin-bottom: 24px;
+          cursor: pointer;
+          transform-style: preserve-3d;
+          transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+          will-change: transform;
+        }
+        .credit-card-image {
+          width: 100%;
+          height: auto;
+          border-radius: 14px;
+          display: block;
+          box-shadow: 0 20px 40px -20px rgba(24, 44, 100, 0.45);
+          transition: box-shadow 0.5s ease;
+          pointer-events: none;
+          user-select: none;
+        }
+        .credit-card-image-wrap:hover .credit-card-image {
+          box-shadow: 0 30px 60px -15px rgba(46, 116, 234, 0.5);
+        }
+        .credit-card-shine {
+          position: absolute;
+          inset: 0;
+          border-radius: 14px;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          pointer-events: none;
+          mix-blend-mode: overlay;
+        }
+        .credit-card-image-wrap:hover .credit-card-shine { opacity: 1; }
+        .credit-card-body {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .credit-card-name {
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: #182C64;
+          margin-bottom: 4px;
+        }
+        .credit-card-tagline {
+          color: #2E74EA;
+          font-size: 0.95rem;
+          font-weight: 500;
+          margin-bottom: 18px;
+        }
+        .credit-card-benefits {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 22px;
+          flex: 1;
+        }
+        .credit-card-benefit {
+          display: flex;
+          align-items: center;
+          color: #182C64;
+          font-size: 0.95rem;
+          transition: transform 0.4s ease, color 0.4s ease;
+        }
+        .credit-card-tile:hover .credit-card-benefit {
+          transform: translateX(4px);
+        }
+        .credit-card-benefit-icon {
+          width: 22px;
+          height: 22px;
+          margin-right: 12px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.4s ease;
+        }
+        .credit-card-tile:hover .credit-card-benefit-icon {
+          transform: scale(1.15) rotate(-6deg);
+        }
+        .credit-card-btn {
+          align-self: flex-start;
+          padding: 10px 26px;
+          border-radius: 14px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          color: white;
+          background: linear-gradient(80deg, #182C64 0%, #2E74EA 100%);
+          border: none;
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .credit-card-btn:hover {
+          transform: translateY(-2px) scale(1.03);
+          box-shadow: 0 10px 25px -5px rgba(46, 116, 234, 0.5);
+        }
+        @media (max-width: 768px) {
+          .credit-card-tile { padding: 20px; }
+          .credit-card-name { font-size: 1.35rem; }
+        }
       `}</style>
 
       {/* Cookie Consent Banner */}
@@ -491,9 +688,9 @@ export default function Index() {
               <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
               NXTOne Account
             </button>
-            <button className="mobile-menu-item" onClick={() => scrollToSection('pricing-section')}>
-              <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              Plans
+            <button className="mobile-menu-item" onClick={() => scrollToSection('credit-cards-section')}>
+              <svg className="mobile-menu-icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              Credit Cards
             </button>
             <button className="mobile-menu-item" onClick={() => scrollToSection('features-section')}>
               <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -563,7 +760,7 @@ export default function Index() {
                 <div className="nav-menu-container">
                   <div className="nav-menu-inner">
                     <button onClick={() => scrollToSection('marketing-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">NXTOne Account</button>
-                    <button onClick={() => scrollToSection('pricing-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Plans</button>
+                    <button onClick={() => scrollToSection('credit-cards-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Credit Cards</button>
                     <button onClick={() => scrollToSection('features-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Why NXT</button>
                     <button onClick={() => scrollToSection('download-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Download App</button>
                   </div>
@@ -572,7 +769,7 @@ export default function Index() {
             ) : (
               <nav className="hidden md:flex space-x-12 absolute left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-full transition-all duration-300">
                 <button onClick={() => scrollToSection('marketing-section')} className="nav-menu-item transition-colors duration-300 text-white">NXTOne Account</button>
-                <button onClick={() => scrollToSection('pricing-section')} className="nav-menu-item transition-colors duration-300 text-white">Plans</button>
+                <button onClick={() => scrollToSection('credit-cards-section')} className="nav-menu-item transition-colors duration-300 text-white">Credit Cards</button>
                 <button onClick={() => scrollToSection('features-section')} className="nav-menu-item transition-colors duration-300 text-white">Why NXT</button>
                 <button onClick={() => scrollToSection('download-section')} className="nav-menu-item transition-colors duration-300 text-white">Download App</button>
               </nav>
@@ -674,281 +871,63 @@ export default function Index() {
 
         {/* Container for remaining content */}
         <div className="relative bg-white" style={{zIndex: 30}}>
-          {/* Pricing Cards Section */}
-          <section id="pricing-section" className="py-24">
-            <div className="max-w-7xl mx-auto px-8 sm:px-12 w-full">
+          {/* Credit Cards Section */}
+          <section id="credit-cards-section" className="py-24">
+            <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
               <ScrollReveal animation="fade-up">
                 <div className="text-center mb-16">
                   <h2 className="text-4xl md:text-5xl font-bold mb-3" style={{color: '#182C64'}}>
-                    All what you need is your <span style={{color: '#8C15E9'}}>NXTOne</span> account
+                    Pick your <span style={{color: '#8C15E9'}}>NXT</span> card
                   </h2>
-                  <p className="text-3xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
-                    Select your favorite <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span> plan to unlock great benefits
+                  <p className="text-xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
+                    Whatever your move, there's an <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span> card built for it
                   </p>
                 </div>
               </ScrollReveal>
 
-              {/* Desktop Cards Grid */}
-              <div className="hidden lg:flex lg:justify-center lg:items-start lg:gap-12 max-w-6xl mx-auto pricing-cards-grid">
-                {/* XZERO Card */}
-                <ScrollReveal animation="fade-up" delay={100} className="pricing-card flex-1 max-w-sm">
-                  <div className="pricing-card-content bg-gray-50 rounded-2xl px-2 pb-6 transform hover:scale-105 transition-all duration-300 border border-solid" 
-                       style={{ borderColor: '#2E74EA', borderWidth: '1px', borderRadius: '1rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', paddingTop: '0.125rem' }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.borderColor = 'transparent';
-                         e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(45deg, rgba(140, 21, 233, 0.7) 20%, rgba(47, 255, 243, 1) 70%, rgba(46, 116, 234, 1) 80%) border-box';
-                         e.currentTarget.style.border = '3px solid transparent';
-                         e.currentTarget.style.borderRadius = '1rem';
-                         e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(47, 255, 243, 0.4)';
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.borderColor = '#2E74EA';
-                         e.currentTarget.style.background = '#f8fafc';
-                         e.currentTarget.style.border = '1px solid #2E74EA';
-                         e.currentTarget.style.borderRadius = '1rem';
-                         e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
-                       }}>
-                    <div className="text-center" style={{marginBottom: '26px'}}>
-                      <div className="flex justify-center items-center mx-auto pricing-card-icon" style={{width: '130px', height: '130px', marginTop: '-25px', marginBottom: '-35px'}}>
-                        <img src="/assets/icons/xzero-icon.png" alt="XZERO" className="object-contain" style={{width: '130px', height: '130px'}} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12">
+                {creditCards.map((card, idx) => (
+                  <ScrollReveal
+                    key={card.name}
+                    animation="card-deal"
+                    delay={150 + idx * 180}
+                    duration={950}
+                    easing="cubic-bezier(0.16, 1, 0.3, 1)"
+                    once
+                  >
+                    <div className="credit-card-tile">
+                      <div
+                        className="credit-card-image-wrap"
+                        onMouseMove={handleCardTilt}
+                        onMouseLeave={handleCardReset}
+                      >
+                        <img src={card.image} alt={card.name} className="credit-card-image" />
+                        <div className="credit-card-shine"></div>
                       </div>
-                      <div className="text-base" style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>Free</div>
-                      <div className="text-sm" style={{color: 'transparent', height: '1.25rem'}}>&nbsp;</div>
-                    </div>
-                    <div className="space-y-3 mb-8 px-2">
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Free virtual debit card</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Interest earning account</span>
+                      <div className="credit-card-body">
+                        <h3 className="credit-card-name">{card.name}</h3>
+                        <p className="credit-card-tagline">{card.tagline}</p>
+                        <div className="credit-card-benefits">
+                          {card.benefits.map((benefit, bi) => (
+                            <div key={bi} className="credit-card-benefit">
+                              <div className="credit-card-benefit-icon">
+                                <CustomTick color="#8C15E9" />
+                              </div>
+                              <span>{benefit}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <button className="credit-card-btn">Get this card</button>
                       </div>
                     </div>
-                    <div className="flex justify-center">
-                      <button className="w-3/5 text-white font-bold py-2 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg text-sm"
-                              style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)'}}>Get NXT</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                {/* XPRESS Card */}
-                <ScrollReveal animation="fade-up" delay={250} className="pricing-card flex-1 max-w-sm">
-                  <div className="pricing-card-content xpress bg-gray-50 rounded-2xl px-2 pb-6 transform hover:scale-105 transition-all duration-300 border border-solid" 
-                       style={{ borderColor: '#2E74EA', borderWidth: '1px', borderRadius: '1rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', paddingTop: '0.125rem' }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.borderColor = 'transparent';
-                         e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(45deg, rgba(140, 21, 233, 0.7) 20%, rgba(47, 255, 243, 1) 70%, rgba(46, 116, 234, 1) 80%) border-box';
-                         e.currentTarget.style.border = '3px solid transparent';
-                         e.currentTarget.style.borderRadius = '1rem';
-                         e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(47, 255, 243, 0.4)';
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.borderColor = '#2E74EA';
-                         e.currentTarget.style.background = '#f8fafc';
-                         e.currentTarget.style.border = '1px solid #2E74EA';
-                         e.currentTarget.style.borderRadius = '1rem';
-                         e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
-                       }}>
-                    <div className="text-center" style={{marginBottom: '26px'}}>
-                      <div className="flex justify-center items-center mx-auto pricing-card-icon" style={{width: '130px', height: '130px', marginTop: '-25px', marginBottom: '-35px'}}>
-                        <img src="/assets/icons/xpress-icon.png" alt="XPRESS" className="object-contain" style={{width: '130px', height: '130px'}} />
-                      </div>
-                      <div className="text-base" style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>2 USD</div>
-                      <div className="text-sm" style={{color: '#182C64'}}>per month</div>
-                    </div>
-                    <div className="space-y-3 mb-8 px-2">
-                      <div className="flex items-center text-sm" style={{color: '#2E74EA'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Everything in XZERO</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Free Platinum debit card</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Up to 1% cash back*</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center">
-                      <button className="w-3/5 text-white font-bold py-2 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg text-sm"
-                              style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)'}}>Get NXT</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                {/* XCLUSIVE Card */}
-                <ScrollReveal animation="fade-up" delay={400} className="pricing-card flex-1 max-w-sm">
-                  <div className="pricing-card-content xclusive bg-gray-50 rounded-2xl px-2 pb-6 transform hover:scale-105 transition-all duration-300 border border-solid" 
-                       style={{ borderColor: '#2E74EA', borderWidth: '1px', borderRadius: '1rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', paddingTop: '0.125rem' }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.borderColor = 'transparent';
-                         e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(45deg, rgba(140, 21, 233, 0.7) 20%, rgba(47, 255, 243, 1) 70%, rgba(46, 116, 234, 1) 80%) border-box';
-                         e.currentTarget.style.border = '3px solid transparent';
-                         e.currentTarget.style.borderRadius = '1rem';
-                         e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(47, 255, 243, 0.4)';
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.borderColor = '#2E74EA';
-                         e.currentTarget.style.background = '#f8fafc';
-                         e.currentTarget.style.border = '1px solid #2E74EA';
-                         e.currentTarget.style.borderRadius = '1rem';
-                         e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
-                       }}>
-                    <div className="text-center" style={{marginBottom: '26px'}}>
-                      <div className="flex justify-center items-center mx-auto pricing-card-icon" style={{width: '130px', height: '130px', marginTop: '-25px', marginBottom: '-35px'}}>
-                        <img src="/assets/icons/xclusive-icon.png" alt="XCLUSIVE" className="object-contain" style={{width: '130px', height: '130px'}} />
-                      </div>
-                      <div className="text-base" style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>120 USD</div>
-                      <div className="text-sm" style={{color: '#182C64'}}>per year</div>
-                    </div>
-                    <div className="space-y-3 mb-8 px-2">
-                      <div className="flex items-center text-sm" style={{color: '#2E74EA'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Everything in XPRESS</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Free Visa Infinite credit card**</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Travel insurance</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Airport lounge access</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Concierge service</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center" style={{backgroundColor: 'transparent'}}><CustomTick color="#8C15E9" /></div>
-                        <span>Dedicated relationship manager</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center">
-                      <button className="w-3/5 text-white font-bold py-2 rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg text-sm"
-                              style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)'}}>Get NXT</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
+                  </ScrollReveal>
+                ))}
               </div>
 
-              {/* Mobile Cards */}
-              <div className="lg:hidden space-y-8 px-6">
-                <ScrollReveal animation="fade-up" delay={100} className="pricing-card">
-                  <div className="pricing-card-content bg-gray-50 rounded-2xl px-2 pb-6 border" 
-                       style={{ borderColor: '#2E74EA', borderWidth: '1px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', paddingTop: '0.125rem' }}>
-                    <div className="text-center" style={{marginBottom: '26px'}}>
-                      <div className="flex justify-center pricing-card-icon" style={{marginTop: '-15px', marginBottom: '-35px'}}>
-                        <img src="/assets/icons/xzero-icon.png" alt="XZERO" className="object-contain" style={{width: '130px', height: '130px'}} />
-                      </div>
-                      <div className="text-base" style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>Free</div>
-                      <div className="text-sm" style={{color: 'transparent', height: '1.25rem'}}>&nbsp;</div>
-                    </div>
-                    <div className="space-y-2 mb-6 px-2">
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Free virtual debit card</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Interest earning account</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center">
-                      <button className="w-3/5 text-white font-bold py-2 rounded-xl text-sm transform hover:scale-105 transition-all duration-300"
-                              style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)'}}>Get NXT</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={200} className="pricing-card">
-                  <div className="pricing-card-content bg-gray-50 rounded-2xl px-2 pb-6 border" 
-                       style={{ borderColor: '#2E74EA', borderWidth: '1px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', paddingTop: '0.125rem' }}>
-                    <div className="text-center" style={{marginBottom: '26px'}}>
-                      <div className="flex justify-center mb-0 pricing-card-icon" style={{marginBottom: '-35px'}}>
-                        <img src="/assets/icons/xpress-icon.png" alt="XPRESS" className="object-contain" style={{width: '130px', height: '130px'}} />
-                      </div>
-                      <div className="text-base" style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>2 USD</div>
-                      <div className="text-sm" style={{color: '#182C64'}}>per month</div>
-                    </div>
-                    <div className="space-y-2 mb-6 px-2">
-                      <div className="flex items-center text-sm" style={{color: '#2E74EA'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Everything in XZERO</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Free Platinum debit card</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Up to 1% cash back*</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center">
-                      <button className="w-3/5 text-white font-bold py-2 rounded-xl text-sm transform hover:scale-105 transition-all duration-300"
-                              style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)'}}>Get NXT</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                <ScrollReveal animation="fade-up" delay={300} className="pricing-card">
-                  <div className="pricing-card-content bg-gray-50 rounded-2xl px-2 pb-6 shadow-2xl border"
-                       style={{ borderColor: '#2E74EA', borderWidth: '1px', paddingTop: '0.125rem' }}>
-                    <div className="text-center" style={{marginBottom: '26px'}}>
-                      <div className="flex justify-center mb-0 pricing-card-icon" style={{marginBottom: '-35px'}}>
-                        <img src="/assets/icons/xclusive-icon.png" alt="XCLUSIVE" className="object-contain" style={{width: '130px', height: '130px'}} />
-                      </div>
-                      <div className="text-base" style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'}}>120 USD</div>
-                      <div className="text-sm" style={{color: '#182C64'}}>per year</div>
-                    </div>
-                    <div className="space-y-2 mb-6 px-2">
-                      <div className="flex items-center text-sm" style={{color: '#2E74EA'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Everything in XPRESS</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Free Infinite credit card**</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Travel insurance</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Airport lounge access</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Concierge service</span>
-                      </div>
-                      <div className="flex items-center text-sm" style={{color: '#182C64'}}>
-                        <div className="w-4 h-4 rounded-full mr-3 flex items-center justify-center"><CustomTick color="#8C15E9" /></div>
-                        <span>Dedicated relationship manager</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center">
-                      <button className="w-3/5 text-white font-bold py-2 rounded-xl text-sm transition-all duration-300"
-                              style={{background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)'}}>Get NXT</button>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              </div>
-
-              {/* Disclaimers */}
-              <ScrollReveal animation="fade-in" delay={500}>
-                <div className="mt-12 text-center space-y-2 px-4">
+              <ScrollReveal animation="fade-in" delay={400}>
+                <div className="mt-16 text-center px-4">
                   <p className="text-xs text-[#182C64]">
-                    * Cashback is awarded at a rate of 0.75% on local POS and online transactions, and 1% on international POS and online transactions.
-                  </p>
-                  <p className="text-xs text-[#182C64]">
-                    ** Credit card and credit limits are granted at the Bank's sole discretion and approval.
+                    Credit cards and credit limits are granted at the Bank's sole discretion and approval.
                   </p>
                 </div>
               </ScrollReveal>
