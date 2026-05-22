@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '@/components/ScrollReveal';
+import CardApplicationDialog from '@/components/CardApplicationDialog';
 
 export default function Index() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,6 +27,13 @@ export default function Index() {
 
   // Cookie consent state
   const [showCookieBanner, setShowCookieBanner] = useState(false);
+
+  // Credit cards carousel state
+  const [currentCardIdx, setCurrentCardIdx] = useState(0);
+  const [cardCarouselPaused, setCardCarouselPaused] = useState(false);
+
+  // Card application dialog state
+  const [applicationCard, setApplicationCard] = useState<{ name: string } | null>(null);
 
   // Check cookie consent on mount
   useEffect(() => {
@@ -83,6 +91,15 @@ export default function Index() {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // Auto-advance credit card carousel (paused on hover)
+  useEffect(() => {
+    if (cardCarouselPaused) return;
+    const interval = setInterval(() => {
+      setCurrentCardIdx((i) => (i + 1) % 4);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [cardCarouselPaused]);
 
   // Enhanced scroll function
   const scrollToSection = (sectionId: string) => {
@@ -648,6 +665,93 @@ export default function Index() {
           .credit-card-tile { padding: 20px; }
           .credit-card-name { font-size: 1.35rem; }
         }
+        /* Credit Cards Carousel */
+        .card-carousel-viewport {
+          position: relative;
+          padding: 20px 0 0;
+        }
+        .card-carousel-stage {
+          position: relative;
+          height: 620px;
+          margin: 0 auto;
+          max-width: 1100px;
+        }
+        .card-carousel-slide {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 380px;
+          max-width: calc(100% - 32px);
+          transform-origin: center center;
+          transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                      opacity 0.7s ease,
+                      filter 0.7s ease;
+          will-change: transform, opacity;
+        }
+        .card-carousel-slide.is-center {
+          transform: translateX(-50%) scale(1);
+          opacity: 1;
+          z-index: 3;
+          filter: none;
+        }
+        .card-carousel-slide.is-right {
+          transform: translateX(40%) scale(0.82);
+          opacity: 0.55;
+          z-index: 2;
+          filter: blur(0.5px);
+          pointer-events: none;
+        }
+        .card-carousel-slide.is-left {
+          transform: translateX(-140%) scale(0.82);
+          opacity: 0.55;
+          z-index: 2;
+          filter: blur(0.5px);
+          pointer-events: none;
+        }
+        .card-carousel-slide.is-hidden {
+          transform: translateX(-50%) scale(0.6);
+          opacity: 0;
+          z-index: 1;
+          pointer-events: none;
+        }
+        .card-carousel-dots {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          margin-top: 32px;
+        }
+        .card-carousel-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          border: none;
+          background: rgba(46, 116, 234, 0.25);
+          cursor: pointer;
+          padding: 0;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-carousel-dot:hover {
+          background: rgba(46, 116, 234, 0.55);
+          transform: scale(1.1);
+        }
+        .card-carousel-dot.is-active {
+          width: 32px;
+          border-radius: 6px;
+          background: linear-gradient(80deg, #182C64 0%, #2E74EA 100%);
+        }
+        @media (max-width: 1024px) {
+          .card-carousel-stage { height: 600px; }
+          .card-carousel-slide { width: 340px; }
+          .card-carousel-slide.is-right { transform: translateX(35%) scale(0.78); }
+          .card-carousel-slide.is-left { transform: translateX(-135%) scale(0.78); }
+        }
+        @media (max-width: 768px) {
+          .card-carousel-stage { height: 580px; }
+          .card-carousel-slide { width: 320px; }
+          .card-carousel-slide.is-right,
+          .card-carousel-slide.is-left { opacity: 0; transform: translateX(-50%) scale(0.6); }
+        }
       `}</style>
 
       {/* Cookie Consent Banner */}
@@ -885,44 +989,74 @@ export default function Index() {
                 </div>
               </ScrollReveal>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-12">
-                {creditCards.map((card, idx) => (
-                  <ScrollReveal
-                    key={card.name}
-                    animation="card-deal"
-                    delay={150 + idx * 180}
-                    duration={950}
-                    easing="cubic-bezier(0.16, 1, 0.3, 1)"
-                    once
-                  >
-                    <div className="credit-card-tile">
-                      <div
-                        className="credit-card-image-wrap"
-                        onMouseMove={handleCardTilt}
-                        onMouseLeave={handleCardReset}
-                      >
-                        <img src={card.image} alt={card.name} className="credit-card-image" />
-                        <div className="credit-card-shine"></div>
-                      </div>
-                      <div className="credit-card-body">
-                        <h3 className="credit-card-name">{card.name}</h3>
-                        <p className="credit-card-tagline">{card.tagline}</p>
-                        <div className="credit-card-benefits">
-                          {card.benefits.map((benefit, bi) => (
-                            <div key={bi} className="credit-card-benefit">
-                              <div className="credit-card-benefit-icon">
-                                <CustomTick color="#8C15E9" />
-                              </div>
-                              <span>{benefit}</span>
+              <ScrollReveal
+                animation="card-deal"
+                duration={950}
+                easing="cubic-bezier(0.16, 1, 0.3, 1)"
+                once
+              >
+                <div
+                  className="card-carousel-viewport"
+                  onMouseEnter={() => setCardCarouselPaused(true)}
+                  onMouseLeave={() => setCardCarouselPaused(false)}
+                >
+                  <div className="card-carousel-stage">
+                    {creditCards.map((card, idx) => {
+                      const total = creditCards.length;
+                      const offset = (idx - currentCardIdx + total) % total;
+                      let slot = 'is-hidden';
+                      if (offset === 0) slot = 'is-center';
+                      else if (offset === 1) slot = 'is-right';
+                      else if (offset === total - 1) slot = 'is-left';
+                      return (
+                        <div key={card.name} className={`card-carousel-slide ${slot}`}>
+                          <div className="credit-card-tile">
+                            <div
+                              className="credit-card-image-wrap"
+                              onMouseMove={handleCardTilt}
+                              onMouseLeave={handleCardReset}
+                            >
+                              <img src={card.image} alt={card.name} className="credit-card-image" />
+                              <div className="credit-card-shine"></div>
                             </div>
-                          ))}
+                            <div className="credit-card-body">
+                              <h3 className="credit-card-name">{card.name}</h3>
+                              <p className="credit-card-tagline">{card.tagline}</p>
+                              <div className="credit-card-benefits">
+                                {card.benefits.map((benefit, bi) => (
+                                  <div key={bi} className="credit-card-benefit">
+                                    <div className="credit-card-benefit-icon">
+                                      <CustomTick color="#8C15E9" />
+                                    </div>
+                                    <span>{benefit}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              <button
+                                type="button"
+                                className="credit-card-btn"
+                                onClick={() => setApplicationCard({ name: card.name })}
+                              >
+                                Get this card
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <button className="credit-card-btn">Get this card</button>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                ))}
-              </div>
+                      );
+                    })}
+                  </div>
+                  <div className="card-carousel-dots">
+                    {creditCards.map((card, idx) => (
+                      <button
+                        key={card.name}
+                        className={`card-carousel-dot ${idx === currentCardIdx ? 'is-active' : ''}`}
+                        onClick={() => setCurrentCardIdx(idx)}
+                        aria-label={`Show ${card.name}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </ScrollReveal>
 
               <ScrollReveal animation="fade-in" delay={400}>
                 <div className="mt-16 text-center px-4">
@@ -1054,6 +1188,11 @@ export default function Index() {
           </div>
         </div>
       </footer>
+
+      <CardApplicationDialog
+        card={applicationCard}
+        onClose={() => setApplicationCard(null)}
+      />
     </div>
   );
 }
