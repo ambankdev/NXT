@@ -15,7 +15,7 @@ export default function TermsAndConditions() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2">
               <img 
-                src="/assets/images/logo-dark.png"
+                src="/assets/images/logo-color.png"
                 alt="NXT Logo" 
                 className="h-8 sm:h-10 w-auto hover:scale-105 transition-transform duration-300"
               />
@@ -96,7 +96,7 @@ export default function TermsAndConditions() {
             {/* Logo */}
             <div className="flex items-center">
               <img 
-                src="/assets/images/logo-light.png" 
+                src="/assets/images/logo-white.png" 
                 alt="NXT Logo" 
                 className="h-8 w-auto"
               />
