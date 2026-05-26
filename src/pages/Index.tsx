@@ -1156,7 +1156,7 @@ export default function Index() {
           {/* Desktop Layout */}
           <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
             <div className="flex items-center">
-              <img src="/assets/images/logo-color.png" alt="NXT Logo" className="h-10 w-auto" />
+              <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-10 w-auto" />
             </div>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
@@ -1185,7 +1185,7 @@ export default function Index() {
             <div className="flex flex-col space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src="/assets/images/logo-color.png" alt="NXT Logo" className="h-8 w-auto" />
+                  <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-8 w-auto" />
                 </div>
                 <div className="flex space-x-4">
                   <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
