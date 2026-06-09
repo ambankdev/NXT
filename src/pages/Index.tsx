@@ -24,13 +24,23 @@ export default function Index() {
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
   const video3Ref = useRef<HTMLVideoElement>(null);
+  const video2SectionRef = useRef<HTMLElement>(null);
+  const video3SectionRef = useRef<HTMLElement>(null);
+
+  // True once the section gets close to the viewport — gates loading
+  const [video2Ready, setVideo2Ready] = useState(false);
+  const [video3Ready, setVideo3Ready] = useState(false);
+
+  // Track viewport so we render only one source (desktop OR mobile) per slot
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
+  );
 
   // Cookie consent state
   const [showCookieBanner, setShowCookieBanner] = useState(false);
 
   // Credit cards carousel state
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
-  const [cardCarouselPaused, setCardCarouselPaused] = useState(false);
 
   // Card application dialog state
   const [applicationCard, setApplicationCard] = useState<{ name: string } | null>(null);
@@ -77,46 +87,77 @@ export default function Index() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Enhanced video playback handler
+  // Track viewport changes so the mobile/desktop video swap follows browser resize
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobileViewport(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  // Eagerly play the banner video — it's above the fold
   useEffect(() => {
     const playVideo = async (videoRef: React.RefObject<HTMLVideoElement>, setLoaded: (loaded: boolean) => void) => {
-      if (videoRef.current) {
-        try {
-          videoRef.current.load();
-          videoRef.current.addEventListener('loadeddata', () => setLoaded(true));
-          videoRef.current.addEventListener('canplay', async () => {
-            try { await videoRef.current?.play(); } catch { /* silent */ }
-          });
-          await videoRef.current.play();
-        } catch {
-          const playOnInteraction = async () => {
-            try {
-              await videoRef.current?.play();
-              document.removeEventListener('click', playOnInteraction);
-              document.removeEventListener('touchstart', playOnInteraction);
-            } catch { /* silent */ }
-          };
-          document.addEventListener('click', playOnInteraction, { once: true });
-          document.addEventListener('touchstart', playOnInteraction, { once: true });
-        }
+      if (!videoRef.current) return;
+      try {
+        videoRef.current.addEventListener('loadeddata', () => setLoaded(true));
+        videoRef.current.addEventListener('canplay', async () => {
+          try { await videoRef.current?.play(); } catch { /* silent */ }
+        });
+        await videoRef.current.play();
+      } catch {
+        const playOnInteraction = async () => {
+          try { await videoRef.current?.play(); } catch { /* silent */ }
+          document.removeEventListener('click', playOnInteraction);
+          document.removeEventListener('touchstart', playOnInteraction);
+        };
+        document.addEventListener('click', playOnInteraction, { once: true });
+        document.addEventListener('touchstart', playOnInteraction, { once: true });
       }
     };
-    const timer = setTimeout(() => {
-      playVideo(video1Ref, setVideo1Loaded);
-      playVideo(video2Ref, setVideo2Loaded);
-      playVideo(video3Ref, setVideo3Loaded);
-    }, 100);
+    const timer = setTimeout(() => playVideo(video1Ref, setVideo1Loaded), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-advance credit card carousel (paused on hover)
+  // Lazy-load Video2/Video3 — only fetch their bytes once the section is ~600px from the viewport
   useEffect(() => {
-    if (cardCarouselPaused) return;
-    const interval = setInterval(() => {
-      setCurrentCardIdx((i) => (i + 1) % 4);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [cardCarouselPaused]);
+    const observers: IntersectionObserver[] = [];
+    const observe = (sectionRef: React.RefObject<HTMLElement>, setReady: (v: boolean) => void) => {
+      if (!sectionRef.current) return;
+      const o = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setReady(true);
+            o.disconnect();
+          }
+        },
+        { rootMargin: '600px 0px' }
+      );
+      o.observe(sectionRef.current);
+      observers.push(o);
+    };
+    observe(video2SectionRef, setVideo2Ready);
+    observe(video3SectionRef, setVideo3Ready);
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  // Trigger play once the lazy videos have their src attached
+  useEffect(() => {
+    const ref = video2Ref.current;
+    if (video2Ready && ref) {
+      ref.addEventListener('loadeddata', () => setVideo2Loaded(true), { once: true });
+      ref.play().catch(() => { /* autoplay may be blocked; first interaction will retry */ });
+    }
+  }, [video2Ready]);
+
+  useEffect(() => {
+    const ref = video3Ref.current;
+    if (video3Ready && ref) {
+      ref.addEventListener('loadeddata', () => setVideo3Loaded(true), { once: true });
+      ref.play().catch(() => { /* same as above */ });
+    }
+  }, [video3Ready]);
 
   // Enhanced scroll function
   const scrollToSection = (sectionId: string) => {
@@ -505,12 +546,6 @@ export default function Index() {
           min-width: 100%; min-height: 100%; width: auto; height: auto;
           transform: translate(-50%, -50%); object-fit: cover;
         }
-        .video-desktop { display: block; }
-        .video-mobile { display: none; }
-        @media (max-width: 768px) {
-          .video-desktop { display: none; }
-          .video-mobile { display: block; }
-        }
         .cookie-banner {
           position: fixed; bottom: 20px; right: 20px; width: 350px;
           max-width: calc(100vw - 40px); background: white;
@@ -811,7 +846,7 @@ export default function Index() {
             </div>
             <button className="mobile-menu-item" onClick={() => scrollToSection('marketing-section')}>
               <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              NXTOne Account
+              Debit Cards
             </button>
             <button className="mobile-menu-item" onClick={() => scrollToSection('credit-cards-section')}>
               <svg className="mobile-menu-icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
@@ -833,16 +868,18 @@ export default function Index() {
       <div className="w-full h-screen relative overflow-hidden">
         <div className="video-container">
           {!video1Loaded && <LoadingSpinner />}
-          <video ref={video1Ref} autoPlay muted loop playsInline preload="auto"
-            className="video-element video-desktop"
-            style={{ opacity: video1Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
-            <source src="/assets/images/banner-video.mp4" type="video/mp4" />
-          </video>
-          <video autoPlay muted loop playsInline preload="auto"
-            className="video-element video-mobile"
-            style={{ opacity: video1Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
-            <source src="/assets/images/banner-video-mobile.mp4" type="video/mp4" />
-          </video>
+          <video
+            ref={video1Ref}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={isMobileViewport ? "/assets/images/posters/banner-mobile.jpg" : "/assets/images/posters/banner.jpg"}
+            className="video-element"
+            style={{ opacity: video1Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
+            src={isMobileViewport ? "/assets/images/banner-video-mobile.mp4" : "/assets/images/banner-video.mp4"}
+          />
         </div>
         <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
           <div className="text-center text-white"></div>
@@ -860,7 +897,7 @@ export default function Index() {
             <div className="flex items-center space-x-2 relative">
               {!logoError ? (
                 <img 
-                  src={isScrolled ? "/assets/images/logo-color.png" : "/assets/images/logo-white.png"}
+                  src="/assets/images/logo-color.png"
                   alt="NXT Logo" 
                   className={`w-auto logo-clickable logo-fade transition-all duration-300 ${
                     isScrolled ? 'h-8 sm:h-9' : 'h-12 sm:h-14'
@@ -884,7 +921,7 @@ export default function Index() {
               <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2">
                 <div className="nav-menu-container">
                   <div className="nav-menu-inner">
-                    <button onClick={() => scrollToSection('marketing-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">NXTOne Account</button>
+                    <button onClick={() => scrollToSection('marketing-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Debit Cards</button>
                     <button onClick={() => scrollToSection('credit-cards-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Credit Cards</button>
                     <button onClick={() => scrollToSection('features-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Why NXT</button>
                     <button onClick={() => scrollToSection('download-section')} className="nav-menu-item scrolled transition-colors duration-300 text-[#182C64]">Download App</button>
@@ -893,7 +930,7 @@ export default function Index() {
               </div>
             ) : (
               <nav className="hidden md:flex space-x-12 absolute left-1/2 transform -translate-x-1/2 px-6 py-2 rounded-full transition-all duration-300">
-                <button onClick={() => scrollToSection('marketing-section')} className="nav-menu-item transition-colors duration-300 text-white">NXTOne Account</button>
+                <button onClick={() => scrollToSection('marketing-section')} className="nav-menu-item transition-colors duration-300 text-white">Debit Cards</button>
                 <button onClick={() => scrollToSection('credit-cards-section')} className="nav-menu-item transition-colors duration-300 text-white">Credit Cards</button>
                 <button onClick={() => scrollToSection('features-section')} className="nav-menu-item transition-colors duration-300 text-white">Why NXT</button>
                 <button onClick={() => scrollToSection('download-section')} className="nav-menu-item transition-colors duration-300 text-white">Download App</button>
@@ -961,36 +998,49 @@ export default function Index() {
         </section>
 
         {/* First Marketing Banner Section */}
-        <section id="marketing-section" className="sticky top-[56px] h-[calc(100vh-56px)] relative overflow-hidden bg-gray-900" style={{zIndex: 5}}>
+        <section
+          ref={video2SectionRef}
+          id="marketing-section"
+          className="sticky top-[56px] h-[calc(100vh-56px)] relative overflow-hidden bg-gray-900"
+          style={{ zIndex: 5 }}
+        >
           <div className="video-container">
             {!video2Loaded && <LoadingSpinner />}
-            <video ref={video2Ref} autoPlay muted loop playsInline preload="auto"
-              className="video-element video-desktop"
-              style={{ opacity: video2Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
-              <source src="/assets/images/Video2.mp4" type="video/mp4" />
-            </video>
-            <video autoPlay muted loop playsInline preload="auto"
-              className="video-element video-mobile"
-              style={{ opacity: video2Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
-              <source src="/assets/images/Video2-mobile.mp4" type="video/mp4" />
-            </video>
+            <video
+              ref={video2Ref}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={isMobileViewport ? "/assets/images/posters/video2-mobile.jpg" : "/assets/images/posters/video2.jpg"}
+              className="video-element"
+              style={{ opacity: video2Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
+              src={video2Ready ? (isMobileViewport ? "/assets/images/Video2-mobile.mp4" : "/assets/images/Video2.mp4") : undefined}
+            />
           </div>
         </section>
 
         {/* Second Marketing Banner Section */}
-        <section className="sticky top-[56px] h-[calc(100vh-56px)] relative overflow-hidden bg-gray-800" style={{zIndex: 6}}>
+        <section
+          ref={video3SectionRef}
+          className="sticky top-[56px] h-[calc(100vh-56px)] relative overflow-hidden bg-gray-800"
+          style={{ zIndex: 6 }}
+        >
           <div className="video-container">
             {!video3Loaded && <LoadingSpinner />}
-            <video ref={video3Ref} autoPlay muted loop playsInline preload="auto"
-              className="video-element video-desktop"
-              style={{ opacity: video3Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
-              <source src="/assets/images/Video3.mp4" type="video/mp4" />
-            </video>
-            <video autoPlay muted loop playsInline preload="auto"
-              className="video-element video-mobile"
-              style={{ opacity: video3Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
-              <source src="/assets/images/Video3-mobile.mp4" type="video/mp4" />
-            </video>
+            <video
+              ref={video3Ref}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={isMobileViewport ? "/assets/images/posters/video3-mobile.jpg" : "/assets/images/posters/video3.jpg"}
+              className="video-element"
+              style={{ opacity: video3Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
+              src={video3Ready ? (isMobileViewport ? "/assets/images/Video3-mobile.mp4" : "/assets/images/Video3.mp4") : undefined}
+            />
           </div>
         </section>
 
@@ -1016,11 +1066,7 @@ export default function Index() {
                 easing="cubic-bezier(0.16, 1, 0.3, 1)"
                 once
               >
-                <div
-                  className="card-carousel-viewport"
-                  onMouseEnter={() => setCardCarouselPaused(true)}
-                  onMouseLeave={() => setCardCarouselPaused(false)}
-                >
+                <div className="card-carousel-viewport">
                   <div
                     className="card-carousel-stage"
                     onPointerDown={handleCarouselPointerDown}
@@ -1156,10 +1202,10 @@ export default function Index() {
           {/* Desktop Layout */}
           <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
             <div className="flex items-center">
-              <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-10 w-auto" />
+              <img src="/assets/images/logo-color.png" alt="NXT Logo" className="h-10 w-auto" />
             </div>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=615805344515522" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
               </a>
               <a href="https://www.instagram.com/nxt_leb/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
@@ -1185,10 +1231,10 @@ export default function Index() {
             <div className="flex flex-col space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-8 w-auto" />
+                  <img src="/assets/images/logo-color.png" alt="NXT Logo" className="h-8 w-auto" />
                 </div>
                 <div className="flex space-x-4">
-                  <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                  <a href="https://www.facebook.com/profile.php?id=615805344515522" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                   </a>
                   <a href="https://www.instagram.com/nxt_leb/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">

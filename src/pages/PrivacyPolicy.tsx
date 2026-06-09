@@ -91,7 +91,7 @@ export default function PrivacyPolicy() {
             {/* Logo */}
             <div className="flex items-center">
               <img 
-                src="/assets/images/logo-white.png" 
+                src="/assets/images/logo-color.png" 
                 alt="NXT Logo" 
                 className="h-8 w-auto"
               />
