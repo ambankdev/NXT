@@ -127,7 +127,7 @@ export default function RightsAndDuties() {
 
             {/* Social Media Icons with Links */}
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+              <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
@@ -164,7 +164,7 @@ export default function RightsAndDuties() {
 
             {/* All Rights Reserved */}
             <div className="text-white text-sm">
-              © 2024 NXT. All rights reserved.
+              ©Copyright 2026 NXT. All rights reserved.
             </div>
           </div>
 
@@ -174,14 +174,14 @@ export default function RightsAndDuties() {
               {/* First Line: Logo and Social Media Icons */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img 
-                    src="https://mgx-backend-cdn.metadl.com/generate/images/324538/2026-01-11/ed8c267d-c9bb-49ff-ab06-3c9db3394ea8.png" 
-                    alt="NXT Logo" 
+                  <img
+                    src="/assets/images/logo-white.png"
+                    alt="NXT Logo"
                     className="h-8 w-auto"
                   />
                 </div>
                 <div className="flex space-x-4">
-                  <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                  <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
@@ -221,7 +221,7 @@ export default function RightsAndDuties() {
 
               {/* Third Line: All Rights Reserved */}
               <div className="text-white text-sm text-center">
-                © 2024 NXT. All rights reserved.
+                ©Copyright 2026 NXT. All rights reserved.
               </div>
             </div>
           </div>

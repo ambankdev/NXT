@@ -34,51 +34,127 @@ export default function PrivacyPolicy() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 pt-24">
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8">
           <h1 className="text-4xl font-bold mb-8" style={{color: '#182C64'}}>
-            Privacy and Cookies Policy
+            Privacy Policy
           </h1>
-          
+
           <div className="prose prose-lg max-w-none">
-            <p className="text-gray-600 mb-8">
-              Last updated: December 2024
+            <p className="text-gray-700 mb-6">
+              We appreciate the trust you place in us when sharing your personal data. The security and confidentiality of that data are very important to us. In this document, we will explain how we collect, use and protect your personal data in accordance with applicable Lebanese laws and regulations specifically law No. 81/2018, BDL circulars, and international data protection standards.
+            </p>
+            <p className="text-gray-700 mb-6">
+              We will also explain what rights you have with regards to your personal data and how you can exercise those rights.
+            </p>
+            <p className="text-gray-700 mb-4">
+              We collect personal data from you for one or more of the following purposes:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+              <li>To provide you with information or services that you have requested or which we think may be relevant to a subject in which you have demonstrated an interest;</li>
+              <li>To initiate and complete commercial transactions with you, or the entity that you represent, for the purchase of products and/or services;</li>
+              <li>To fulfill a contract that we have entered into with you or with the entity that you represent;</li>
+              <li>To ensure the security and safe operation of our website and underlying business infrastructure, and</li>
+              <li>To manage any communication between you and us.</li>
+            </ul>
+            <p className="text-gray-700 mb-8">
+              We provide below more details about the data that we collect for each of these purposes, the lawful basis for doing so, and the period for which we will retain each type of data.
             </p>
 
             <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
-              1. Privacy Commitment
+              Technical Information
             </h2>
-            <p className="text-gray-700 mb-6">
-              At NXT, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy and Cookies Policy explains how we collect, use, store, and protect your data when you use our digital wallet services. We believe in transparency and want you to understand exactly how your information is handled.
+            <p className="text-gray-700 mb-4">
+              In addition, and in order to ensure that each visitor to any of our websites can use and navigate the site effectively, we collect the following:
             </p>
-            <p className="text-gray-700 mb-6">
-              Your trust is fundamental to our relationship with you. We implement industry-leading security measures and follow strict data protection protocols to safeguard your personal and financial information. We will never sell your personal data to third parties for marketing purposes, and we only share your information when necessary to provide our services or when required by law.
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+              <li>Technical information, including the Internet Protocol (IP) address used to connect your device to the Internet;</li>
+              <li>Your login information, browser type and version, time zone setting, browser plug-in types and versions;</li>
+              <li>Operating system and platform;</li>
+              <li>Information about your visit, including the Uniform Resource Locators (URL) clickstream to, though, and from our site.</li>
+            </ul>
+            <p className="text-gray-700 mb-8">
+              Our cookies policy, which can be viewed from our web site, describes in detail how we use cookies.
             </p>
 
             <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
-              2. Information We Collect
+              Your Rights
             </h2>
-            <div className="mb-6">
-              <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
-                Personal Information
-              </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                <li>Name, address, phone number, and email address</li>
-                <li>Government-issued identification documents</li>
-                <li>Financial information and transaction history</li>
-                <li>Device information and IP addresses</li>
-                <li>Biometric data for security purposes (where permitted)</li>
-              </ul>
-            </div>
+            <p className="text-gray-700 mb-4">
+              We identify your rights in respect of the personal data that we collect and describe how you can exercise those rights, including:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+              <li>Right to access and obtain a copy of your personal data</li>
+              <li>Right to request correction of inaccurate or incomplete data</li>
+              <li>Right to request deletion of your personal data, subject to legal retention requirements</li>
+            </ul>
+            <p className="text-gray-700 mb-8">
+              To exercise any of these rights, you may contact us at: <a href="mailto:connect@mynxt.com" className="text-[#2E74EA] hover:underline">connect@mynxt.com</a>
+            </p>
 
-            <div className="mb-8">
-              <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
-                Automatically Collected Information
-              </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                <li>Usage patterns and app interactions</li>
-                <li>Location data (with your permission)</li>
-                <li>Device characteristics and operating system</li>
-                <li>Network and connection information</li>
-              </ul>
-            </div>
+            <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
+              Lawful basis for the processing of personal data
+            </h2>
+            <p className="text-gray-700 mb-6">
+              We describe below the various forms of personal data we collect and the lawful basis for processing this data. Our business architecture, accounting and systems infrastructure and compliance organization means that all personal data is processed on common, Group-wide platforms. We have processes in place to make sure that only those people in our organization who need to access your data can do so. A number of data elements are collected for multiple purposes, as shown below. Some data may be shared with third parties and, where this happens, this is also identified below. Sharing is limited to what is necessary and subject to confidentiality and data protection obligations.
+            </p>
+            <p className="text-gray-700 mb-6">
+              All processing is performed in compliance with Lebanese Law No. 81/2018 and, where relevant, with the principles of the EU General Data Protection Regulation (GDPR).
+            </p>
+            <p className="text-gray-700 mb-4">
+              When we process on the lawful basis of legitimate interest, we apply the following test to determine whether it is appropriate:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-8">
+              <li><span className="font-medium" style={{color: '#182C64'}}>The purpose test</span> – is there a legitimate interest behind the processing?</li>
+              <li><span className="font-medium" style={{color: '#182C64'}}>Necessity test</span> – is the processing necessary for that purpose?</li>
+              <li><span className="font-medium" style={{color: '#182C64'}}>Balancing test</span> – is the legitimate interest overridden, or not, by the individual's interests, rights or freedoms?</li>
+            </ul>
+
+            <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
+              Data collection process
+            </h2>
+            <ol className="list-decimal pl-6 space-y-4 text-gray-700 mb-8">
+              <li>
+                Data collection that includes client information such as name, location, email, and business sector to deliver requested services based on contractual fulfilment, and to send related updates under legitimate interest. Phone numbers and personal contact information are also collected for follow-up purposes, under legitimate interest or consent, respectively. All data is shared internally only. The retention period is up to 10 years from the collection date.
+              </li>
+              <li>
+                Transactional information such as personal and banking details are collected to process purchases, fulfill accounting obligations, and support legal claims, based on contractual performance, statutory obligations, or legitimate interest. The retention period is up to 10 years from the collection date.
+              </li>
+              <li>
+                Payment card data such as account number, cardholder name, and expiration date are collected to complete transactions and may be shared with card companies. The retention period is up to 10 years from the collection date.
+              </li>
+              <li>
+                Security information is gathered to protect systems from cyber threats under legitimate interest, and may be shared with relevant technical entities. Data is retained as per legal time limits.
+              </li>
+              <li>
+                Communication data is used to follow up on user inquiries, also under legitimate interest, and shared internally or with professional advisers. Data is retained as per legal time limits.
+              </li>
+            </ol>
+
+            <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
+              Push Notifications
+            </h2>
+            <p className="text-gray-700 mb-8">
+              We may send you push notifications to provide service-related updates such as transaction notifications, security alerts, authentication requests and service updates. To enable these notifications, we may collect and process device identifiers and push notification tokens associated with your device. You may manage your notification preferences through your device settings or within the Application.
+            </p>
+
+            <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
+              Location Data
+            </h2>
+            <p className="text-gray-700 mb-8">
+              With your permission, the Application may collect and process precise location data while the Application is in use and, where enabled on your device, where required for specific services, while the Application is running in the background. Such information may be used to provide location-based features and services, including "Send Money by Location" functionality, enhance safety and security, and improve the user experience. You may withdraw or modify your location permissions at any time through your device settings. If you disable location access, some features of the Application may not function properly.
+            </p>
+
+            <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
+              Third-Party Service Providers
+            </h2>
+            <p className="text-gray-700 mb-4">
+              We may disclose certain personal information to third-party service providers that perform services on our behalf, maintain security, prevent fraud or support the operation of the Application. This disclosure of personal information is only as reasonably necessary for service providers to perform services for us and it is subject to contractual restrictions on confidentiality and security. Service providers are not authorized to use or disclose your personal information for their own independent marketing or other purposes. These service providers may include:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+              <li>Identity verification and biometric authentication providers: Uqudo (ID and passport scanning) and AWS (facial liveness)</li>
+              <li>Push notification service providers: OneSignal and Firebase Cloud Messaging</li>
+              <li>Attribution and deep-linking service providers: Branch</li>
+              <li>Customer support and communication service providers: Crisp</li>
+              <li>Application security, fraud prevention and telemetry service providers: Talsec (freeRASP)</li>
+            </ul>
           </div>
         </div>
       </main>
@@ -99,7 +175,7 @@ export default function PrivacyPolicy() {
 
             {/* Social Media Icons with Links */}
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+              <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
@@ -136,7 +212,7 @@ export default function PrivacyPolicy() {
 
             {/* All Rights Reserved */}
             <div className="text-white text-sm">
-              © 2024 NXT. All rights reserved.
+              ©Copyright 2026 NXT. All rights reserved.
             </div>
           </div>
 
@@ -146,14 +222,14 @@ export default function PrivacyPolicy() {
               {/* First Line: Logo and Social Media Icons */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img 
-                    src="https://mgx-backend-cdn.metadl.com/generate/images/324538/2026-01-11/ed8c267d-c9bb-49ff-ab06-3c9db3394ea8.png" 
-                    alt="NXT Logo" 
+                  <img
+                    src="/assets/images/logo-white.png"
+                    alt="NXT Logo"
                     className="h-8 w-auto"
                   />
                 </div>
                 <div className="flex space-x-4">
-                  <a href="https://www.facebook.com/profile.php?id=615805344515528" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                  <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
@@ -193,7 +269,7 @@ export default function PrivacyPolicy() {
 
               {/* Third Line: All Rights Reserved */}
               <div className="text-white text-sm text-center">
-                © 2024 NXT. All rights reserved.
+                ©Copyright 2026 NXT. All rights reserved.
               </div>
             </div>
           </div>
