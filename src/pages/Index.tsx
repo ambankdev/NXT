@@ -46,19 +46,20 @@ export default function Index() {
   const [applicationCard, setApplicationCard] = useState<{ name: string } | null>(null);
 
   // Carousel drag-to-slide state
-  const carouselDragRef = useRef<{ startX: number; isDragging: boolean }>({ startX: 0, isDragging: false });
+  const carouselDragRef = useRef<{ startX: number; startY: number; isDragging: boolean }>({ startX: 0, startY: 0, isDragging: false });
 
   const handleCarouselPointerDown = (e: React.PointerEvent) => {
-    carouselDragRef.current = { startX: e.clientX, isDragging: true };
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    carouselDragRef.current = { startX: e.clientX, startY: e.clientY, isDragging: true };
   };
 
   const handleCarouselPointerEnd = (e: React.PointerEvent) => {
     if (!carouselDragRef.current.isDragging) return;
-    const diff = e.clientX - carouselDragRef.current.startX;
+    const diffX = e.clientX - carouselDragRef.current.startX;
+    const diffY = e.clientY - carouselDragRef.current.startY;
     carouselDragRef.current.isDragging = false;
-    if (Math.abs(diff) > 50) {
-      setCurrentCardIdx((i) => (diff < 0 ? (i + 1) % 4 : (i - 1 + 4) % 4));
+    // Trigger only when the gesture is clearly horizontal — ignore mostly-vertical scrolls
+    if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+      setCurrentCardIdx((i) => (diffX < 0 ? (i + 1) % 4 : (i - 1 + 4) % 4));
     }
   };
 
@@ -1194,7 +1195,7 @@ export default function Index() {
               <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-10 w-auto" />
             </div>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/profile.php?id=615805344515522" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+              <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
               </a>
               <a href="https://www.instagram.com/nxt_leb/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
@@ -1223,7 +1224,7 @@ export default function Index() {
                   <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-8 w-auto" />
                 </div>
                 <div className="flex space-x-4">
-                  <a href="https://www.facebook.com/profile.php?id=615805344515522" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
+                  <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                   </a>
                   <a href="https://www.instagram.com/nxt_leb/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
