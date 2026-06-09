@@ -90,9 +90,9 @@ export default function PrivacyPolicy() {
           <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-8">
             {/* Logo */}
             <div className="flex items-center">
-              <img 
-                src="/assets/images/logo-color.png" 
-                alt="NXT Logo" 
+              <img
+                src="/assets/images/logo-white.png"
+                alt="NXT Logo"
                 className="h-8 w-auto"
               />
             </div>

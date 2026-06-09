@@ -98,26 +98,21 @@ export default function Index() {
 
   // Eagerly play the banner video — it's above the fold
   useEffect(() => {
-    const playVideo = async (videoRef: React.RefObject<HTMLVideoElement>, setLoaded: (loaded: boolean) => void) => {
-      if (!videoRef.current) return;
-      try {
-        videoRef.current.addEventListener('loadeddata', () => setLoaded(true));
-        videoRef.current.addEventListener('canplay', async () => {
-          try { await videoRef.current?.play(); } catch { /* silent */ }
-        });
-        await videoRef.current.play();
-      } catch {
-        const playOnInteraction = async () => {
-          try { await videoRef.current?.play(); } catch { /* silent */ }
-          document.removeEventListener('click', playOnInteraction);
-          document.removeEventListener('touchstart', playOnInteraction);
-        };
-        document.addEventListener('click', playOnInteraction, { once: true });
-        document.addEventListener('touchstart', playOnInteraction, { once: true });
-      }
-    };
-    const timer = setTimeout(() => playVideo(video1Ref, setVideo1Loaded), 100);
-    return () => clearTimeout(timer);
+    const v = video1Ref.current;
+    if (!v) return;
+    // readyState >= 2 (HAVE_CURRENT_DATA) means the first frame is decoded — loadeddata may have already fired
+    if (v.readyState >= 2) {
+      setVideo1Loaded(true);
+    } else {
+      v.addEventListener('loadeddata', () => setVideo1Loaded(true), { once: true });
+    }
+    v.play().catch(() => {
+      const playOnInteraction = () => {
+        v.play().catch(() => { /* silent */ });
+      };
+      document.addEventListener('click', playOnInteraction, { once: true });
+      document.addEventListener('touchstart', playOnInteraction, { once: true });
+    });
   }, []);
 
   // Lazy-load Video2/Video3 — only fetch their bytes once the section is ~600px from the viewport
@@ -144,19 +139,25 @@ export default function Index() {
 
   // Trigger play once the lazy videos have their src attached
   useEffect(() => {
-    const ref = video2Ref.current;
-    if (video2Ready && ref) {
-      ref.addEventListener('loadeddata', () => setVideo2Loaded(true), { once: true });
-      ref.play().catch(() => { /* autoplay may be blocked; first interaction will retry */ });
+    const v = video2Ref.current;
+    if (!video2Ready || !v) return;
+    if (v.readyState >= 2) {
+      setVideo2Loaded(true);
+    } else {
+      v.addEventListener('loadeddata', () => setVideo2Loaded(true), { once: true });
     }
+    v.play().catch(() => { /* autoplay may be blocked; first interaction will retry */ });
   }, [video2Ready]);
 
   useEffect(() => {
-    const ref = video3Ref.current;
-    if (video3Ready && ref) {
-      ref.addEventListener('loadeddata', () => setVideo3Loaded(true), { once: true });
-      ref.play().catch(() => { /* same as above */ });
+    const v = video3Ref.current;
+    if (!video3Ready || !v) return;
+    if (v.readyState >= 2) {
+      setVideo3Loaded(true);
+    } else {
+      v.addEventListener('loadeddata', () => setVideo3Loaded(true), { once: true });
     }
+    v.play().catch(() => { /* same as above */ });
   }, [video3Ready]);
 
   // Enhanced scroll function
@@ -603,22 +604,10 @@ export default function Index() {
           flex-direction: column;
           overflow: hidden;
         }
-        .credit-card-tile::before {
-          content: '';
-          position: absolute;
-          inset: -1px;
-          border-radius: 24px;
-          background: linear-gradient(135deg, rgba(140, 21, 233, 0.5) 0%, rgba(47, 255, 243, 0.6) 50%, rgba(46, 116, 234, 0.7) 100%);
-          opacity: 0;
-          transition: opacity 0.4s ease;
-          z-index: -1;
-        }
         .credit-card-tile:hover {
           transform: translateY(-8px);
           box-shadow: 0 30px 60px -15px rgba(46, 116, 234, 0.35);
-          border-color: transparent;
         }
-        .credit-card-tile:hover::before { opacity: 1; }
         .credit-card-image-wrap {
           position: relative;
           margin-bottom: 24px;
@@ -1202,7 +1191,7 @@ export default function Index() {
           {/* Desktop Layout */}
           <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
             <div className="flex items-center">
-              <img src="/assets/images/logo-color.png" alt="NXT Logo" className="h-10 w-auto" />
+              <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-10 w-auto" />
             </div>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/profile.php?id=615805344515522" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
@@ -1231,7 +1220,7 @@ export default function Index() {
             <div className="flex flex-col space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src="/assets/images/logo-color.png" alt="NXT Logo" className="h-8 w-auto" />
+                  <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-8 w-auto" />
                 </div>
                 <div className="flex space-x-4">
                   <a href="https://www.facebook.com/profile.php?id=615805344515522" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
