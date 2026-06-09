@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
             <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
               <li>To provide you with information or services that you have requested or which we think may be relevant to a subject in which you have demonstrated an interest;</li>
               <li>To initiate and complete commercial transactions with you, or the entity that you represent, for the purchase of products and/or services;</li>
-              <li>To fulfill a contract that we have entered into with you or with the entity that you represent;</li>
+              <li>To fulfil a contract that we have entered into with you or with the entity that you represent;</li>
               <li>To ensure the security and safe operation of our website and underlying business infrastructure, and</li>
               <li>To manage any communication between you and us.</li>
             </ul>
@@ -115,7 +115,7 @@ export default function PrivacyPolicy() {
                 Data collection that includes client information such as name, location, email, and business sector to deliver requested services based on contractual fulfilment, and to send related updates under legitimate interest. Phone numbers and personal contact information are also collected for follow-up purposes, under legitimate interest or consent, respectively. All data is shared internally only. The retention period is up to 10 years from the collection date.
               </li>
               <li>
-                Transactional information such as personal and banking details are collected to process purchases, fulfill accounting obligations, and support legal claims, based on contractual performance, statutory obligations, or legitimate interest. The retention period is up to 10 years from the collection date.
+                Transactional information such as personal and banking details are collected to process purchases, fulfil accounting obligations, and support legal claims, based on contractual performance, statutory obligations, or legitimate interest. The retention period is up to 10 years from the collection date.
               </li>
               <li>
                 Payment card data such as account number, cardholder name, and expiration date are collected to complete transactions and may be shared with card companies. The retention period is up to 10 years from the collection date.
@@ -155,6 +155,79 @@ export default function PrivacyPolicy() {
               <li>Customer support and communication service providers: Crisp</li>
               <li>Application security, fraud prevention and telemetry service providers: Talsec (freeRASP)</li>
             </ul>
+
+            <h2 className="text-3xl font-bold mt-12 mb-6" style={{color: '#182C64'}}>
+              Cookies Policy
+            </h2>
+
+            <h3 className="text-xl font-semibold mb-3" style={{color: '#182C64'}}>
+              What are cookies?
+            </h3>
+            <p className="text-gray-700 mb-8">
+              A cookie is a small file of letters and numbers that is downloaded on to your device when you visit a website. Cookies are used by many websites and can do a number of things, like remembering your preferences, recording what you have chosen as options, and counting the number of people looking at a website.
+            </p>
+
+            <h3 className="text-xl font-semibold mb-3" style={{color: '#182C64'}}>
+              Why do we use them?
+            </h3>
+            <p className="text-gray-700 mb-4">
+              We use cookies for a number of reasons, such as:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+              <li>To help us improve your experience when using our website</li>
+              <li>To remember your preferences so there is no need for you to select the same customized options on each visit</li>
+              <li>To analyze how well our website is performing</li>
+              <li>To learn more about the way you interact with our website</li>
+            </ul>
+            <p className="text-gray-700 mb-8">
+              The key reason for using cookies, however, is to make our website more convenient, efficient and user-friendly for you.
+            </p>
+
+            <h3 className="text-xl font-semibold mb-3" style={{color: '#182C64'}}>
+              Types of cookies we use
+            </h3>
+            <ol className="list-decimal pl-6 space-y-4 text-gray-700 mb-8">
+              <li>
+                <span className="font-medium" style={{color: '#182C64'}}>Necessary Cookies:</span> These cookies ensure the website functions properly. They do not identify you as an individual, but rejecting them may affect website performance.
+              </li>
+              <li>
+                <span className="font-medium" style={{color: '#182C64'}}>Performance Cookies:</span> These cookies collect anonymous data on user interactions such as time spent and pages visited to insure site performance. They do not identify you as an individual.
+              </li>
+              <li>
+                <span className="font-medium" style={{color: '#182C64'}}>Functionality Cookies:</span> These cookies store user preferences like language or username to provide a more personalized online experience and may collect personally identifiable information disclosed by the user, such as usernames or user IDs.
+              </li>
+            </ol>
+
+            <h3 className="text-xl font-semibold mb-3" style={{color: '#182C64'}}>
+              Social media and third-party cookies
+            </h3>
+            <p className="text-gray-700 mb-6">
+              To enrich our website content, we may sometimes embed videos from other social media websites such as YouTube, Facebook, and other providers. As a result, when you visit a page with content embedded, you may be presented with cookies from these websites. AM Bank has no control or liability over these cookies set, please check the relevant third party's cookie policy for more information.
+            </p>
+            <p className="text-gray-700 mb-8">
+              We also offer a widget where content or information can be shared easily on sites like Facebook, Yammer, Twitter, LinkedIn, Google+, and others. These sites may set a cookie when you are logged into their service. AM Bank has no control or liability over these cookies, please check the relevant third party's cookie policy for more information.
+            </p>
+
+            <h3 className="text-xl font-semibold mb-3" style={{color: '#182C64'}}>
+              How can I control my cookies?
+            </h3>
+            <p className="text-gray-700 mb-4">
+              You can use your web browser to:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+              <li>Delete all cookies</li>
+              <li>Block all cookies</li>
+              <li>Allow all cookies</li>
+              <li>Block third-party cookies</li>
+              <li>Clear all cookies when you close the browser</li>
+              <li>Open a 'private browsing' / 'incognito' session, which enables you to browse the internet without storing local data</li>
+            </ul>
+            <p className="text-gray-700 mb-6">
+              Changing your cookie settings, including deleting and disabling them, may mean that the functionality of our website and your ability to use some of the features will be affected. You will still be able to use our website but you may not be able to access all of AM Bank content and some of the functions may not operate correctly.
+            </p>
+            <p className="text-gray-700 mb-6">
+              You can also visit <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" className="text-[#2E74EA] hover:underline">www.allaboutcookies.org</a> for details on how to delete or reject cookies and for further information on cookies. To learn about the use of cookies on mobile phones and other devices' browsers, and for details on how to reject or delete such cookies, please refer to your device user manual.
+            </p>
           </div>
         </div>
       </main>
