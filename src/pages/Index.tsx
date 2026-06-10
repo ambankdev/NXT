@@ -890,7 +890,7 @@ export default function Index() {
                   src={isScrolled ? "/assets/images/logo-color.png" : "/assets/images/logo-white.png"}
                   alt="NXT Logo"
                   className={`w-auto logo-clickable logo-fade transition-all duration-300 ${
-                    isScrolled ? 'h-8 sm:h-9' : 'h-12 sm:h-14'
+                    isScrolled ? 'h-10 sm:h-11' : 'h-12 sm:h-14'
                   }`}
                   onClick={scrollToTop}
                   onError={handleLogoError}
