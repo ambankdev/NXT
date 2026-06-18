@@ -1034,8 +1034,8 @@ export default function Index() {
           </div>
         </section>
 
-        {/* Container for remaining content */}
-        <div className="relative bg-white" style={{zIndex: 30}}>
+        {/* Container for remaining content — no explicit z-index so the sticky videos stay on top until the user fully scrolls past them */}
+        <div className="relative bg-white">
           {/* Credit Cards Section */}
           <section id="credit-cards-section" className="py-24">
             <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
