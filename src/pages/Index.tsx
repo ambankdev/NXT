@@ -991,7 +991,7 @@ export default function Index() {
         <section
           ref={video2SectionRef}
           id="marketing-section"
-          className="sticky top-[56px] h-[calc(100vh-56px)] relative overflow-hidden bg-gray-900"
+          className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] relative overflow-hidden bg-gray-900"
           style={{ zIndex: 5 }}
         >
           <div className="video-container">
@@ -1014,7 +1014,7 @@ export default function Index() {
         {/* Second Marketing Banner Section */}
         <section
           ref={video3SectionRef}
-          className="sticky top-[56px] h-[calc(100vh-56px)] relative overflow-hidden bg-gray-800"
+          className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] relative overflow-hidden bg-gray-800"
           style={{ zIndex: 6 }}
         >
           <div className="video-container">
