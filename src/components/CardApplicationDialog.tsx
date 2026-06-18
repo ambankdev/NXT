@@ -17,7 +17,6 @@ const WEBHOOK_URL = (import.meta.env.VITE_CARD_APPLICATION_WEBHOOK as string | u
 
 export default function CardApplicationDialog({ card, onClose }: Props) {
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -25,7 +24,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
   useEffect(() => {
     if (card) {
       setFullName('');
-      setEmail('');
       setPhone('');
       setErrors({});
       setSubmitting(false);
@@ -35,7 +33,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
   const validate = () => {
     const next: Record<string, string> = {};
     if (fullName.trim().length < 2) next.fullName = 'Please enter your full name';
-    if (email.trim() && !/^\S+@\S+\.\S+$/.test(email.trim())) next.email = 'Please enter a valid email';
     if (!/^[\d+\-()\s]{6,}$/.test(phone.trim())) next.phone = 'Please enter a valid phone number';
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -49,7 +46,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
     const payload = {
       card: card.name,
       fullName: fullName.trim(),
-      email: email.trim() || null,
       phone: phone.trim(),
       submittedAt: new Date().toISOString(),
     };
@@ -108,22 +104,6 @@ export default function CardApplicationDialog({ card, onClose }: Props) {
               autoComplete="name"
             />
             {errors.fullName && <p className="text-xs text-red-600 mt-1">{errors.fullName}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1.5" style={{ color: '#182C64' }}>
-              Email <span className="text-slate-400 font-normal">(optional)</span>
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={inputClass}
-              style={{ borderColor: errors.email ? '#dc2626' : '#cbd5e1' }}
-              disabled={submitting}
-              autoComplete="email"
-            />
-            {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email}</p>}
           </div>
 
           <div>

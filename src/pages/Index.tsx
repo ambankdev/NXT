@@ -41,6 +41,7 @@ export default function Index() {
 
   // Credit cards carousel state
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
+  const [cardCarouselPaused, setCardCarouselPaused] = useState(false);
 
   // Card application dialog state
   const [applicationCard, setApplicationCard] = useState<{ name: string } | null>(null);
@@ -160,6 +161,15 @@ export default function Index() {
     }
     v.play().catch(() => { /* same as above */ });
   }, [video3Ready]);
+
+  // Auto-advance credit card carousel every 3s, paused while the user hovers
+  useEffect(() => {
+    if (cardCarouselPaused) return;
+    const interval = setInterval(() => {
+      setCurrentCardIdx((i) => (i + 1) % 4);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [cardCarouselPaused]);
 
   // Enhanced scroll function
   const scrollToSection = (sectionId: string) => {
@@ -1042,7 +1052,11 @@ export default function Index() {
                 easing="cubic-bezier(0.16, 1, 0.3, 1)"
                 once
               >
-                <div className="card-carousel-viewport">
+                <div
+                  className="card-carousel-viewport"
+                  onMouseEnter={() => setCardCarouselPaused(true)}
+                  onMouseLeave={() => setCardCarouselPaused(false)}
+                >
                   <div
                     className="card-carousel-stage"
                     onPointerDown={handleCarouselPointerDown}
