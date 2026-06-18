@@ -165,26 +165,9 @@ export default function Index() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const headerHeight = 80;
-      if (sectionId === 'marketing-section') {
-        const videoHeight = window.innerHeight;
-        const downloadSectionHeight = document.getElementById('download-section')?.offsetHeight || 0;
-        // Subtract the sticky-top offset so Video3 (which sits right after Video2 with higher z-index) stays just below the viewport bottom
-        const stickyOffset = window.matchMedia('(max-width: 768px)').matches ? 64 : 72;
-        window.scrollTo({ top: videoHeight + downloadSectionHeight - stickyOffset, behavior: 'smooth' });
-      } else if (sectionId === 'credit-cards-section' || sectionId === 'features-section') {
-        const videoHeight = window.innerHeight;
-        const downloadSectionHeight = document.getElementById('download-section')?.offsetHeight || 0;
-        let scrollPosition = videoHeight + downloadSectionHeight + window.innerHeight + window.innerHeight;
-        if (sectionId === 'features-section') {
-          const cardsElement = document.getElementById('credit-cards-section');
-          if (cardsElement) scrollPosition += cardsElement.offsetHeight;
-        }
-        scrollPosition -= headerHeight;
-        window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: element.offsetTop - headerHeight, behavior: 'smooth' });
-      }
+      const stickyOffset = window.matchMedia('(max-width: 768px)').matches ? 64 : 72;
+      const top = element.getBoundingClientRect().top + window.scrollY - stickyOffset;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
     setMobileMenuOpen(false);
   };
@@ -989,52 +972,54 @@ export default function Index() {
           </div>
         </section>
 
-        {/* First Marketing Banner Section */}
-        <section
-          ref={video2SectionRef}
-          id="marketing-section"
-          className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] relative overflow-hidden bg-gray-900"
-          style={{ zIndex: 5 }}
-        >
-          <div className="video-container">
-            {!video2Loaded && <LoadingSpinner />}
-            <video
-              ref={video2Ref}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={isMobileViewport ? "/assets/images/posters/video2-mobile.jpg" : "/assets/images/posters/video2.jpg"}
-              className="video-element"
-              style={{ opacity: video2Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
-              src={video2Ready ? (isMobileViewport ? "/assets/images/Video2-mobile.mp4" : "/assets/images/Video2.mp4") : undefined}
-            />
-          </div>
-        </section>
+        {/* First Marketing Banner Section — wrapped so the sticky range ends with the wrapper instead of extending to the page footer */}
+        <div ref={video2SectionRef} className="relative h-screen">
+          <section
+            id="marketing-section"
+            className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] overflow-hidden bg-gray-900"
+            style={{ zIndex: 5 }}
+          >
+            <div className="video-container">
+              {!video2Loaded && <LoadingSpinner />}
+              <video
+                ref={video2Ref}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster={isMobileViewport ? "/assets/images/posters/video2-mobile.jpg" : "/assets/images/posters/video2.jpg"}
+                className="video-element"
+                style={{ opacity: video2Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
+                src={video2Ready ? (isMobileViewport ? "/assets/images/Video2-mobile.mp4" : "/assets/images/Video2.mp4") : undefined}
+              />
+            </div>
+          </section>
+        </div>
 
         {/* Second Marketing Banner Section */}
-        <section
-          ref={video3SectionRef}
-          className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] relative overflow-hidden bg-gray-800"
-          style={{ zIndex: 6 }}
-        >
-          <div className="video-container">
-            {!video3Loaded && <LoadingSpinner />}
-            <video
-              ref={video3Ref}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={isMobileViewport ? "/assets/images/posters/video3-mobile.jpg" : "/assets/images/posters/video3.jpg"}
-              className="video-element"
-              style={{ opacity: video3Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
-              src={video3Ready ? (isMobileViewport ? "/assets/images/Video3-mobile.mp4" : "/assets/images/Video3.mp4") : undefined}
-            />
-          </div>
-        </section>
+        <div ref={video3SectionRef} className="relative h-screen">
+          <section
+            className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] overflow-hidden bg-gray-800"
+            style={{ zIndex: 6 }}
+          >
+            <div className="video-container">
+              {!video3Loaded && <LoadingSpinner />}
+              <video
+                ref={video3Ref}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster={isMobileViewport ? "/assets/images/posters/video3-mobile.jpg" : "/assets/images/posters/video3.jpg"}
+                className="video-element"
+                style={{ opacity: video3Loaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
+                src={video3Ready ? (isMobileViewport ? "/assets/images/Video3-mobile.mp4" : "/assets/images/Video3.mp4") : undefined}
+              />
+            </div>
+          </section>
+        </div>
 
         {/* Container for remaining content — no explicit z-index so the sticky videos stay on top until the user fully scrolls past them */}
         <div className="relative bg-white">
