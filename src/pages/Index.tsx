@@ -695,7 +695,6 @@ export default function Index() {
         /* Credit Cards Carousel */
         .card-carousel-viewport {
           position: relative;
-          padding: 20px 0 0;
         }
         .card-carousel-stage {
           position: relative;
@@ -750,7 +749,7 @@ export default function Index() {
           justify-content: center;
           align-items: center;
           gap: 10px;
-          margin-top: 32px;
+          margin-top: 4px;
         }
         .card-carousel-dot {
           width: 10px;
@@ -1104,14 +1103,6 @@ export default function Index() {
                       />
                     ))}
                   </div>
-                </div>
-              </ScrollReveal>
-
-              <ScrollReveal animation="fade-in" delay={400}>
-                <div className="mt-16 text-center px-4">
-                  <p className="text-xs text-[#182C64]">
-                    Credit cards and credit limits are granted at the Bank's sole discretion and approval.
-                  </p>
                 </div>
               </ScrollReveal>
             </div>
