@@ -169,7 +169,9 @@ export default function Index() {
       if (sectionId === 'marketing-section') {
         const videoHeight = window.innerHeight;
         const downloadSectionHeight = document.getElementById('download-section')?.offsetHeight || 0;
-        window.scrollTo({ top: videoHeight + downloadSectionHeight, behavior: 'smooth' });
+        // Subtract the sticky-top offset so Video3 (which sits right after Video2 with higher z-index) stays just below the viewport bottom
+        const stickyOffset = window.matchMedia('(max-width: 768px)').matches ? 64 : 72;
+        window.scrollTo({ top: videoHeight + downloadSectionHeight - stickyOffset, behavior: 'smooth' });
       } else if (sectionId === 'credit-cards-section' || sectionId === 'features-section') {
         const videoHeight = window.innerHeight;
         const downloadSectionHeight = document.getElementById('download-section')?.offsetHeight || 0;
