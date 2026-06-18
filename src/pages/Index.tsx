@@ -544,9 +544,9 @@ export default function Index() {
           position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden;
         }
         .video-element {
-          position: absolute; top: 50%; left: 50%;
-          min-width: 100%; min-height: 100%; width: auto; height: auto;
-          transform: translate(-50%, -50%); object-fit: cover;
+          position: absolute; inset: 0;
+          width: 100%; height: 100%;
+          object-fit: cover; object-position: center;
         }
         .cookie-banner {
           position: fixed; bottom: 20px; right: 20px; width: 350px;
