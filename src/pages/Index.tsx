@@ -729,27 +729,27 @@ export default function Index() {
           will-change: transform, opacity;
         }
         .card-carousel-slide.is-center {
-          transform: translateX(-50%) scale(1);
+          transform: translateX(-50%);
           opacity: 1;
           z-index: 3;
           filter: none;
         }
         .card-carousel-slide.is-right {
-          transform: translateX(40%) scale(0.82);
+          transform: translateX(60%);
           opacity: 0.55;
           z-index: 2;
           filter: blur(0.5px);
           pointer-events: none;
         }
         .card-carousel-slide.is-left {
-          transform: translateX(-140%) scale(0.82);
+          transform: translateX(-160%);
           opacity: 0.55;
           z-index: 2;
           filter: blur(0.5px);
           pointer-events: none;
         }
         .card-carousel-slide.is-hidden {
-          transform: translateX(-50%) scale(0.6);
+          transform: translateX(-50%);
           opacity: 0;
           z-index: 1;
           pointer-events: none;
@@ -783,14 +783,42 @@ export default function Index() {
         @media (max-width: 1024px) {
           .card-carousel-stage { height: 600px; }
           .card-carousel-slide { width: 340px; }
-          .card-carousel-slide.is-right { transform: translateX(35%) scale(0.78); }
-          .card-carousel-slide.is-left { transform: translateX(-135%) scale(0.78); }
+          .card-carousel-slide.is-right { transform: translateX(60%); }
+          .card-carousel-slide.is-left { transform: translateX(-160%); }
         }
         @media (max-width: 768px) {
           .card-carousel-stage { height: 580px; }
           .card-carousel-slide { width: 320px; }
           .card-carousel-slide.is-right,
-          .card-carousel-slide.is-left { opacity: 0; transform: translateX(-50%) scale(0.6); }
+          .card-carousel-slide.is-left { opacity: 0; transform: translateX(-50%); }
+        }
+        /* Mobile carousel arrows */
+        .card-carousel-arrow {
+          display: none;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: none;
+          background: linear-gradient(80deg, #182C64 0%, #2E74EA 100%);
+          color: white;
+          cursor: pointer;
+          z-index: 10;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(24, 44, 100, 0.3);
+          padding: 0;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-carousel-arrow:active {
+          transform: translateY(-50%) scale(0.92);
+        }
+        .card-carousel-arrow-left { left: 8px; }
+        .card-carousel-arrow-right { right: 8px; }
+        @media (max-width: 768px) {
+          .card-carousel-arrow { display: flex; }
         }
       `}</style>
 
@@ -1106,6 +1134,26 @@ export default function Index() {
                         </div>
                       );
                     })}
+                    <button
+                      type="button"
+                      className="card-carousel-arrow card-carousel-arrow-left"
+                      onClick={() => setCurrentCardIdx((i) => (i - 1 + 4) % 4)}
+                      aria-label="Previous card"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className="card-carousel-arrow card-carousel-arrow-right"
+                      onClick={() => setCurrentCardIdx((i) => (i + 1) % 4)}
+                      aria-label="Next card"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
                   </div>
                   <div className="card-carousel-dots">
                     {creditCards.map((card, idx) => (
