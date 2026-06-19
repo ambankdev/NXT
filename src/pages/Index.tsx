@@ -699,8 +699,16 @@ export default function Index() {
           box-shadow: 0 10px 25px -5px rgba(46, 116, 234, 0.5);
         }
         @media (max-width: 768px) {
-          .credit-card-tile { padding: 20px; }
-          .credit-card-name { font-size: 1.35rem; }
+          .credit-card-tile { padding: 14px; border-radius: 18px; }
+          .credit-card-image-wrap { margin-bottom: 14px; }
+          .credit-card-image { border-radius: 10px; }
+          .credit-card-name { font-size: 1.05rem; margin-bottom: 2px; }
+          .credit-card-tagline { font-size: 0.78rem; margin-bottom: 12px; }
+          .credit-card-benefits { gap: 6px; margin-bottom: 14px; }
+          .credit-card-benefit { font-size: 0.78rem; }
+          .credit-card-benefit-icon { width: 16px; height: 16px; margin-right: 8px; }
+          .credit-card-benefit-icon svg { width: 12px; height: 11px; }
+          .credit-card-btn { padding: 7px 18px; font-size: 0.78rem; border-radius: 10px; }
         }
         /* Credit Cards Carousel */
         .card-carousel-viewport {
@@ -787,12 +795,14 @@ export default function Index() {
           .card-carousel-slide.is-left { transform: translateX(-135%) scale(0.78); }
         }
         @media (max-width: 768px) {
-          .card-carousel-stage { height: 580px; }
-          .card-carousel-slide { width: 320px; }
+          .card-carousel-stage { height: 460px; }
+          .card-carousel-slide { width: 250px; }
           /* All non-active states on mobile sit at the same position + scale as the center, so the active card just crossfades in instead of growing */
           .card-carousel-slide.is-right,
           .card-carousel-slide.is-left,
           .card-carousel-slide.is-hidden { opacity: 0; transform: translateX(-50%); }
+          .card-carousel-arrow { width: 30px; height: 30px; }
+          .card-carousel-arrow svg { width: 14px; height: 14px; }
         }
         /* Mobile carousel arrows */
         .card-carousel-arrow {
