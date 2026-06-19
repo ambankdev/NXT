@@ -729,27 +729,27 @@ export default function Index() {
           will-change: transform, opacity;
         }
         .card-carousel-slide.is-center {
-          transform: translateX(-50%);
+          transform: translateX(-50%) scale(1);
           opacity: 1;
           z-index: 3;
           filter: none;
         }
         .card-carousel-slide.is-right {
-          transform: translateX(60%);
+          transform: translateX(40%) scale(0.82);
           opacity: 0.55;
           z-index: 2;
           filter: blur(0.5px);
           pointer-events: none;
         }
         .card-carousel-slide.is-left {
-          transform: translateX(-160%);
+          transform: translateX(-140%) scale(0.82);
           opacity: 0.55;
           z-index: 2;
           filter: blur(0.5px);
           pointer-events: none;
         }
         .card-carousel-slide.is-hidden {
-          transform: translateX(-50%);
+          transform: translateX(-50%) scale(0.6);
           opacity: 0;
           z-index: 1;
           pointer-events: none;
@@ -783,14 +783,16 @@ export default function Index() {
         @media (max-width: 1024px) {
           .card-carousel-stage { height: 600px; }
           .card-carousel-slide { width: 340px; }
-          .card-carousel-slide.is-right { transform: translateX(60%); }
-          .card-carousel-slide.is-left { transform: translateX(-160%); }
+          .card-carousel-slide.is-right { transform: translateX(35%) scale(0.78); }
+          .card-carousel-slide.is-left { transform: translateX(-135%) scale(0.78); }
         }
         @media (max-width: 768px) {
           .card-carousel-stage { height: 580px; }
           .card-carousel-slide { width: 320px; }
+          /* All non-active states on mobile sit at the same position + scale as the center, so the active card just crossfades in instead of growing */
           .card-carousel-slide.is-right,
-          .card-carousel-slide.is-left { opacity: 0; transform: translateX(-50%); }
+          .card-carousel-slide.is-left,
+          .card-carousel-slide.is-hidden { opacity: 0; transform: translateX(-50%); }
         }
         /* Mobile carousel arrows */
         .card-carousel-arrow {
