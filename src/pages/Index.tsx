@@ -255,51 +255,53 @@ export default function Index() {
   );
 
   const creditCards = [
-    {
-      name: "NXT Classic",
-      tagline: "Your everyday companion",
-      image: "/assets/images/cards/card-classic.png",
-      benefits: [
-        "Worldwide Visa acceptance",
-        "Contactless payments",
-        "Real-time spend notifications",
-        "24/7 fraud protection",
-      ],
-    },
-    {
-      name: "NXT Platinum",
-      tagline: "Step up your spending",
-      image: "/assets/images/cards/card-platinum.png",
-      benefits: [
-        "Up to 1% cashback on every swipe",
-        "Higher daily limits",
-        "Free travel insurance",
-        "Priority customer support",
-      ],
-    },
-    {
-      name: "NXT Titanium",
-      tagline: "Built for the everyday traveler",
-      image: "/assets/images/cards/card-titanium.png",
-      benefits: [
-        "2% cashback on dining & travel",
-        "Airport lounge access",
-        "Extended product warranty",
-        "Concierge service",
-      ],
-    },
-    {
-      name: "NXT Infinite",
-      tagline: "Limitless privileges, no compromise",
-      image: "/assets/images/cards/card-infinite.png",
-      benefits: [
-        "Unlimited cashback up to 3%",
-        "Global 24/7 Visa Infinite concierge",
-        "Unlimited premium lounge access worldwide",
-        "Luxury hotel collection perks & room upgrades",
-      ],
-    },
-  ];
+  {
+    name: "Visa Platinum Euro",
+    tagline: "Step up your spending",
+    image: "/assets/images/cards/card-platinum.png",
+    benefits: [
+      "Access to over 25 airport lounges",
+      "Medical and Travel Assistance",
+      "Extended warranty on purchases",
+      "Purchase protection for up to 12 months",
+      "Discounts and deals through visamiddleeast.com",
+      "Global emergency assistance",
+    ],
+  },
+  {
+    name: "MasterCard Titanium",
+    tagline: "Built for the everyday traveler",
+    image: "/assets/images/cards/card-titanium.png",
+    benefits: [
+      "Access to over 10 airport lounges",
+      "Special benefits with Booking.com, IHG Hotels & Resorts and selected travel partners.",
+      "Dining, entertainment and lifestyle experiences through Priceless.com",
+      "International car rental brand offers.",
+    ],
+  },
+  {
+    name: "Visa Infinite",
+    tagline: "Limitless privileges, no compromise",
+    image: "/assets/images/cards/card-infinite.png",
+    benefits: [
+      "Access to over 1,300 airport lounges",
+      "Concierge service",
+      "Dedicated relationship manager",
+      "Travel insurance",
+      "Extended warranty on purchases",
+      "Purchase protection for up to 12 months",
+      "Fraudulent card misuse protection",
+      "Discounts and deals through visamiddleeast.com",
+      "Global emergency assistance",
+    ],
+  },
+  {
+    name: "Visa LBP",
+    tagline: "Your everyday companion",
+    image: "/assets/images/cards/card-classic.png",
+    benefits: [],
+  },
+];
 
   const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
@@ -354,7 +356,7 @@ export default function Index() {
     },
     {
       title: "Quick Balance",
-      description: "Because sometimes you just wanna know 'How much?'<br/>With NXT Quick Balance, you can instantly check your preferred accounts from the login screen.<br/>Drag and drop to check your balance in a flash without logging in — A little shortcut for your everyday banking moments.",
+      description: "Because sometimes you just wanna know 'How much?'<br/>With NXT Quick Balance, you can instantly check your preferred accounts from the login screen.<br/>Drag and drop to check your balance in a flash without logging in.<br/>A little shortcut for your everyday banking moments.",
       features: ["No login needed", "Effortless glance", "Balance in a blink"],
       image: "/assets/images/quick-balance-4.jpg",
       reverse: false
@@ -1078,10 +1080,10 @@ export default function Index() {
               <ScrollReveal animation="fade-up">
                 <div className="text-center mb-16">
                   <h2 className="text-4xl md:text-5xl font-bold mb-3" style={{color: '#182C64'}}>
-                    Pick your <span style={{color: '#8C15E9'}}>NXT</span> card
+                    Explore <span style={{color: '#8C15E9'}}>NXT</span> credit cards
                   </h2>
                   <p className="text-xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
-                    Whatever your move, there's an <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span> card built for it
+                    Your move. Your card. Your <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span>
                   </p>
                 </div>
               </ScrollReveal>
@@ -1123,7 +1125,7 @@ export default function Index() {
                             </div>
                             <div className="credit-card-body">
                               <h3 className="credit-card-name">{card.name}</h3>
-                              <p className="credit-card-tagline">{card.tagline}</p>
+                              {/* <p className="credit-card-tagline">{card.tagline}</p> */}
                               <div className="credit-card-benefits">
                                 {card.benefits.map((benefit, bi) => (
                                   <div key={bi} className="credit-card-benefit">
@@ -1134,13 +1136,13 @@ export default function Index() {
                                   </div>
                                 ))}
                               </div>
-                              <button
+                              {/* <button
                                 type="button"
                                 className="credit-card-btn"
                                 onClick={() => setApplicationCard({ name: card.name })}
                               >
                                 Get this card
-                              </button>
+                              </button> */}
                             </div>
                           </div>
                         </div>
@@ -1188,7 +1190,7 @@ export default function Index() {
             <div className="w-full">
               <ScrollReveal animation="fade-up" className="text-center mb-16 px-4 sm:px-6">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{color: '#182C64'}}>
-                  Everything you need in <span style={{color: '#8C15E9'}}>one app</span>
+                  Everything you need is <span style={{color: '#8C15E9'}}>NXT</span>
                 </h2>
               </ScrollReveal>
 
