@@ -1191,7 +1191,7 @@ export default function Index() {
 
           {/* Alternating Picture/Text Features Section */}
           <div style={{borderTop: "1px solid #182C64"}}></div>
-          <section id="features-section" className="py-10" style={{backgroundColor: '#FFFFFF'}}>
+          <section id="features-section" className="py-12" style={{backgroundColor: '#FFFFFF'}}>
             <div className="w-full">
               <ScrollReveal animation="fade-up" className="text-center mb-2 px-4 sm:px-6">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{color: '#182C64'}}>
