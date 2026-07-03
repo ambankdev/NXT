@@ -17,7 +17,7 @@ const animationStates: Record<Animation, { hidden: string; visible: string }> = 
   'fade-up':   { hidden: 'translateY(40px)',                                                                                visible: 'translateY(0) scale(1)' },
   'scale-in':  { hidden: 'scale(0.92)',                                                                                     visible: 'translateY(0) scale(1)' },
   'fade-in':   { hidden: 'none',                                                                                            visible: 'none' },
-  'card-deal': { hidden: 'perspective(1200px) translateX(120px) translateY(60px) rotateY(-35deg) rotateX(18deg) scale(0.8)', visible: 'perspective(1200px) translateX(0) translateY(0) rotateY(0deg) rotateX(0deg) scale(1)' },
+  'card-deal': { hidden: 'perspective(1200px) translateX(0) translateY(60px) rotateY(-35deg) rotateX(18deg) scale(0.8)', visible: 'perspective(1200px) translateX(0) translateY(0) rotateY(0deg) rotateX(0deg) scale(1)' },
   'flip-in':   { hidden: 'perspective(1200px) rotateY(-85deg) translateY(20px)',                                            visible: 'perspective(1200px) rotateY(0deg) translateY(0) scale(1)' },
 };
 

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  overflow-x: hidden;
+}
+
 @keyframes flowing-gradient {
   0% {
     background-position: 0% 50%;
