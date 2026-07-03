@@ -299,7 +299,12 @@ export default function Index() {
     name: "Visa LBP",
     tagline: "Your everyday companion",
     image: "/assets/images/cards/card-classic.png",
-    benefits: [],
+    benefits: [
+      "Worldwide Visa acceptance",
+      "Contactless payments",
+      "Real-time spend notifications",
+      "24/7 fraud protection",
+    ],
   },
 ];
 
@@ -1075,7 +1080,7 @@ export default function Index() {
         {/* Container for remaining content — no explicit z-index so the sticky videos stay on top until the user fully scrolls past them */}
         <div className="relative bg-white">
           {/* Credit Cards Section */}
-          <section id="credit-cards-section" className="pb-24">
+          <section id="credit-cards-section" className="pb-24 pt-12">
             <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
               <ScrollReveal animation="fade-up">
                 <div className="text-center mb-16">
