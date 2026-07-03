@@ -1200,7 +1200,7 @@ export default function Index() {
               </ScrollReveal>
 
               {alternatingFeatures.map((feature, index) => (
-                <div key={index} className="py-16" style={{backgroundColor: '#FFFFFF'}}>
+                <div key={index} className="py-10" style={{backgroundColor: '#FFFFFF'}}>
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <ScrollReveal animation="fade-up" className={feature.reverse ? 'lg:order-2' : 'lg:order-1'}>
                       <h3 className="text-3xl md:text-4xl font-bold mb-4" style={{color: '#182C64'}}>
