@@ -887,8 +887,8 @@ export default function Index() {
         .card-carousel-arrow:active {
           transform: translateY(-50%) scale(0.92);
         }
-        .card-carousel-arrow-left { left: 8px; }
-        .card-carousel-arrow-right { right: 8px; }
+        .card-carousel-arrow-left { left: 0px; }
+        .card-carousel-arrow-right { right: 0px; }
         @media (max-width: 768px) {
           .card-carousel-arrow { display: flex; }
         }
