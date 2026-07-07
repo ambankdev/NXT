@@ -332,7 +332,7 @@ export default function Index() {
 
   // Turn known domain names inside a benefit string into clickable links
   const BENEFIT_LINKS: Array<{ match: RegExp; href: string }> = [
-    { match: /visamiddleeast\.com/i, href: 'https://www.visamiddleeast.com' },
+    { match: /visamiddleeast\.com/i, href: 'https://www.ae.visamiddleeast.com' },
     { match: /Booking\.com/i, href: 'https://www.booking.com' },
     { match: /Priceless\.com/i, href: 'https://www.priceless.com' },
   ];
@@ -1137,7 +1137,7 @@ export default function Index() {
                     Explore <span style={{color: '#8C15E9'}}>NXT</span> credit cards
                   </h2>
                   <p className="text-xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
-                    Your move. Your card. Your <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span>
+                    Your card. Your <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span> move. Your style.
                   </p>
                 </div>
               </ScrollReveal>

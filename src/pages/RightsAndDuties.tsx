@@ -24,7 +24,7 @@ export default function RightsAndDuties() {
               to="/" 
               className="text-blue-600 hover:text-blue-800 transition-colors font-medium"
             >
-              ← Back to Home
+              ← Home
             </Link>
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function RightsAndDuties() {
           
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-600 mb-8">
-              Last updated: December 2024
+              Last updated: <span style={{color: '#182C64'}}>December 2024</span>
             </p>
 
             <h2 className="text-2xl font-semibold mb-4" style={{color: '#182C64'}}>
