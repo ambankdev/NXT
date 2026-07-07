@@ -330,6 +330,38 @@ export default function Index() {
     e.currentTarget.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)';
   };
 
+  // Turn known domain names inside a benefit string into clickable links
+  const BENEFIT_LINKS: Array<{ match: RegExp; href: string }> = [
+    { match: /visamiddleeast\.com/i, href: 'https://www.visamiddleeast.com' },
+    { match: /Booking\.com/i, href: 'https://www.booking.com' },
+    { match: /Priceless\.com/i, href: 'https://www.priceless.com' },
+  ];
+  const renderBenefit = (text: string): React.ReactNode => {
+    const pattern = new RegExp(BENEFIT_LINKS.map((l) => l.match.source).join('|'), 'gi');
+    const parts = text.split(pattern);
+    const matches = text.match(pattern) ?? [];
+    const out: React.ReactNode[] = [];
+    parts.forEach((part, i) => {
+      out.push(<span key={`t${i}`}>{part}</span>);
+      if (i < matches.length) {
+        const m = matches[i];
+        const link = BENEFIT_LINKS.find((l) => l.match.test(m));
+        out.push(
+          <a
+            key={`l${i}`}
+            href={link?.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-[#2E74EA] transition-colors"
+          >
+            {m}
+          </a>
+        );
+      }
+    });
+    return out;
+  };
+
   const alternatingFeatures = [
     {
       title: "Transfer by Location",
@@ -706,7 +738,26 @@ export default function Index() {
           box-shadow: 0 10px 25px -5px rgba(46, 116, 234, 0.5);
         }
         @media (max-width: 768px) {
-          .credit-card-tile { padding: 14px; border-radius: 18px; }
+          /* On mobile the white pill wraps only the text block (name + tagline + benefits + button), not the card image */
+          .credit-card-tile {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 0;
+            overflow: visible;
+          }
+          .credit-card-tile:hover {
+            transform: none;
+            box-shadow: none;
+          }
+          .credit-card-body {
+            background: white;
+            border: 1px solid rgba(46, 116, 234, 0.15);
+            border-radius: 18px;
+            padding: 14px;
+            box-shadow: 0 10px 30px -10px rgba(24, 44, 100, 0.15);
+          }
           .credit-card-image-wrap { margin-bottom: 14px; }
           .credit-card-image { border-radius: 10px; }
           .credit-card-name { font-size: 1.05rem; margin-bottom: 2px; }
@@ -803,13 +854,15 @@ export default function Index() {
         }
         @media (max-width: 768px) {
           .card-carousel-stage { height: 460px; }
-          .card-carousel-slide { width: 250px; }
+          .card-carousel-slide { width: 220px; }
           /* All non-active states on mobile sit at the same position + scale as the center, so the active card just crossfades in instead of growing */
           .card-carousel-slide.is-right,
           .card-carousel-slide.is-left,
           .card-carousel-slide.is-hidden { opacity: 0; transform: translateX(-50%); }
           .card-carousel-arrow { width: 30px; height: 30px; }
           .card-carousel-arrow svg { width: 14px; height: 14px; }
+          .card-carousel-arrow-left { left: -12px; }
+          .card-carousel-arrow-right { right: -12px; }
         }
         /* Mobile carousel arrows */
         .card-carousel-arrow {
@@ -876,20 +929,16 @@ export default function Index() {
               </button>
             </div>
             <button className="mobile-menu-item" onClick={() => scrollToSection('marketing-section')}>
-              <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              Debit Cards
+              Debit cards
             </button>
             <button className="mobile-menu-item" onClick={() => scrollToSection('credit-cards-section')}>
-              <svg className="mobile-menu-icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-              Credit Cards
+              Credit cards
             </button>
             <button className="mobile-menu-item" onClick={() => scrollToSection('features-section')}>
-              <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Why NXT
+              Why nxt
             </button>
             <button className="mobile-menu-item" onClick={() => scrollToSection('download-section')}>
-              <svg className="mobile-menu-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 15v-3m0 0v-3m0 3h3m-3 0h-3m6 3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Download App
+              Download app
             </button>
           </div>
         </div>
@@ -1080,7 +1129,7 @@ export default function Index() {
         {/* Container for remaining content — no explicit z-index so the sticky videos stay on top until the user fully scrolls past them */}
         <div className="relative bg-white">
           {/* Credit Cards Section */}
-          <section id="credit-cards-section" className="pb-24 pt-12">
+          <section id="credit-cards-section" className="pb-24 pt-0 sm:pt-12">
             <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
               <ScrollReveal animation="fade-up">
                 <div className="text-center mb-14">
@@ -1137,7 +1186,7 @@ export default function Index() {
                                     <div className="credit-card-benefit-icon">
                                       <CustomTick color="#8C15E9" />
                                     </div>
-                                    <span>{benefit}</span>
+                                    <span>{renderBenefit(benefit)}</span>
                                   </div>
                                 ))}
                               </div>
@@ -1190,7 +1239,7 @@ export default function Index() {
           </section>
 
           {/* Alternating Picture/Text Features Section */}
-          <div style={{borderTop: "1px solid #182C64"}}></div>
+          <div style={{borderTop: "1px solid rgba(24, 44, 100, 0.15)"}}></div>
           <section id="features-section" className="py-12" style={{backgroundColor: '#FFFFFF'}}>
             <div className="w-full">
               <ScrollReveal animation="fade-up" className="text-center mb-2 px-4 sm:px-6">
