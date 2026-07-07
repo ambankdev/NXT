@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Personal Information
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Name, address, phone number, and email address</li>
                 <li>Government-issued identification documents</li>
                 <li>Financial information and transaction history</li>
@@ -72,7 +72,7 @@ export default function PrivacyPolicy() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Automatically Collected Information
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Usage patterns and app interactions</li>
                 <li>Location data (with your permission)</li>
                 <li>Device characteristics and operating system</li>

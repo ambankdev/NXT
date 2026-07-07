@@ -47,7 +47,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               We collect personal data from you for one or more of the following purposes:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-6">
               <li>To provide you with information or services that you have requested or which we think may be relevant to a subject in which you have demonstrated an interest;</li>
               <li>To initiate and complete commercial transactions with you, or the entity that you represent, for the purchase of products and/or services;</li>
               <li>To fulfil a contract that we have entered into with you or with the entity that you represent;</li>
@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               In addition, and in order to ensure that each visitor to any of our websites can use and navigate the site effectively, we collect the following:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-6">
               <li>Technical information, including the Internet Protocol (IP) address used to connect your device to the Internet;</li>
               <li>Your login information, browser type and version, time zone setting, browser plug-in types and versions;</li>
               <li>Operating system and platform;</li>
@@ -80,7 +80,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               We identify your rights in respect of the personal data that we collect and describe how you can exercise those rights, including:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-6">
               <li>Right to access and obtain a copy of your personal data</li>
               <li>Right to request correction of inaccurate or incomplete data</li>
               <li>Right to request deletion of your personal data, subject to legal retention requirements</li>
@@ -101,7 +101,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               When we process on the lawful basis of legitimate interest, we apply the following test to determine whether it is appropriate:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-8">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-8">
               <li><span className="font-medium" style={{color: '#182C64'}}>The purpose test</span> – is there a legitimate interest behind the processing?</li>
               <li><span className="font-medium" style={{color: '#182C64'}}>Necessity test</span> – is the processing necessary for that purpose?</li>
               <li><span className="font-medium" style={{color: '#182C64'}}>Balancing test</span> – is the legitimate interest overridden, or not, by the individual's interests, rights or freedoms?</li>
@@ -148,7 +148,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               We may disclose certain personal information to third-party service providers that perform services on our behalf, maintain security, prevent fraud or support the operation of the Application. This disclosure of personal information is only as reasonably necessary for service providers to perform services for us and it is subject to contractual restrictions on confidentiality and security. Service providers are not authorized to use or disclose your personal information for their own independent marketing or other purposes. These service providers may include:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-6">
               <li>Identity verification and biometric authentication providers: Uqudo (ID and passport scanning) and AWS (facial liveness)</li>
               <li>Push notification service providers: OneSignal and Firebase Cloud Messaging</li>
               <li>Attribution and deep-linking service providers: Branch</li>
@@ -173,7 +173,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               We use cookies for a number of reasons, such as:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-6">
               <li>To help us improve your experience when using our website</li>
               <li>To remember your preferences so there is no need for you to select the same customized options on each visit</li>
               <li>To analyze how well our website is performing</li>
@@ -214,7 +214,7 @@ export default function PrivacyPolicy() {
             <p className="text-gray-700 mb-4">
               You can use your web browser to:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
+            <ul className="list-disc-remove pl-6 space-y-2 text-gray-700 mb-6">
               <li>Delete all cookies</li>
               <li>Block all cookies</li>
               <li>Allow all cookies</li>

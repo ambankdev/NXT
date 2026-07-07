@@ -62,7 +62,7 @@ export default function TermsAndConditions() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Core Services
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Digital payment processing and money transfers</li>
                 <li>Virtual and physical debit/credit card services</li>
                 <li>Multi-currency account management</li>
@@ -76,7 +76,7 @@ export default function TermsAndConditions() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Service Availability
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Services available 24/7 with planned maintenance windows</li>
                 <li>Mobile and web platform access</li>
                 <li>Real-time transaction processing</li>

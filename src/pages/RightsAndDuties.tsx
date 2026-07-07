@@ -53,7 +53,7 @@ export default function RightsAndDuties() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Account Access Rights
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Right to access your account 24/7 through our secure platform</li>
                 <li>Right to view all transaction history and account statements</li>
                 <li>Right to receive real-time notifications for account activities</li>
@@ -66,7 +66,7 @@ export default function RightsAndDuties() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Financial Service Rights
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Right to transparent fee structures and pricing</li>
                 <li>Right to dispute transactions and request investigations</li>
                 <li>Right to receive customer support in multiple languages</li>
@@ -86,7 +86,7 @@ export default function RightsAndDuties() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Account Security Duties
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Maintain the confidentiality of your login credentials</li>
                 <li>Enable and use multi-factor authentication</li>
                 <li>Report suspicious activities immediately</li>
@@ -99,7 +99,7 @@ export default function RightsAndDuties() {
               <h3 className="text-xl font-medium mb-3" style={{color: '#182C64'}}>
                 Compliance and Legal Duties
               </h3>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <ul className="list-disc-remove pl-6 space-y-2 text-gray-700">
                 <li>Provide accurate and truthful information</li>
                 <li>Comply with applicable laws and regulations</li>
                 <li>Use services only for legitimate purposes</li>
