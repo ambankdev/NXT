@@ -870,8 +870,8 @@ export default function Index() {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          width: 40px;
-          height: 40px;
+          width: 18px;
+          height: 18px;
           border-radius: 50%;
           border: none;
           background: linear-gradient(80deg, #182C64 0%, #2E74EA 100%);
