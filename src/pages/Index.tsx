@@ -48,6 +48,7 @@ export default function Index() {
 
   // Carousel drag-to-slide state
   const carouselDragRef = useRef<{ startX: number; startY: number; isDragging: boolean }>({ startX: 0, startY: 0, isDragging: false });
+  const carouselStageRef = useRef<HTMLDivElement>(null);
 
   const handleCarouselPointerDown = (e: React.PointerEvent) => {
     carouselDragRef.current = { startX: e.clientX, startY: e.clientY, isDragging: true };
@@ -183,6 +184,33 @@ export default function Index() {
     }, 3000);
     return () => clearInterval(interval);
   }, [cardCarouselPaused]);
+
+  // Size the carousel stage to the tallest tile so long benefits lists (Visa Infinite) don't spill over the dots + border below.
+  useEffect(() => {
+    const stage = carouselStageRef.current;
+    if (!stage) return;
+    const slides = Array.from(stage.querySelectorAll<HTMLElement>('.card-carousel-slide'));
+    if (slides.length === 0) return;
+
+    const measure = () => {
+      let maxHeight = 0;
+      slides.forEach((slide) => {
+        const h = slide.offsetHeight;
+        if (h > maxHeight) maxHeight = h;
+      });
+      if (maxHeight > 0) stage.style.height = `${maxHeight}px`;
+    };
+
+    const ro = new ResizeObserver(measure);
+    slides.forEach((slide) => ro.observe(slide));
+    measure();
+
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
 
   // Enhanced scroll function
   const scrollToSection = (sectionId: string) => {
@@ -1167,6 +1195,7 @@ export default function Index() {
                   onMouseLeave={() => setCardCarouselPaused(false)}
                 >
                   <div
+                    ref={carouselStageRef}
                     className="card-carousel-stage"
                     onPointerDown={handleCarouselPointerDown}
                     onPointerUp={handleCarouselPointerEnd}
