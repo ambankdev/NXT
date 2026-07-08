@@ -419,6 +419,7 @@ export default function Index() {
         /* Logo fade transition */
         .logo-fade {
           transition: opacity 0.3s ease;
+           min-height:80px;
         }
 
         /* Navigation menu item hover styles */
