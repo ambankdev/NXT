@@ -1078,7 +1078,7 @@ export default function Index() {
         </section>
 
         {/* First Marketing Banner Section — wrapped so the sticky range ends with the wrapper instead of extending to the page footer */}
-        <div ref={video2SectionRef} className="relative h-[100dvh]">
+        <div ref={video2SectionRef} className="relative h-[calc(100dvh-64px)] sm:h-[calc(100dvh-72px)]">
           <section
             id="marketing-section"
             className="sticky top-[64px] sm:top-[72px] h-[calc(100dvh-64px)] sm:h-[calc(100dvh-72px)] overflow-hidden bg-gray-900"
@@ -1103,7 +1103,7 @@ export default function Index() {
         </div>
 
         {/* Second Marketing Banner Section */}
-        <div ref={video3SectionRef} className="relative h-[100dvh]">
+        <div ref={video3SectionRef} className="relative h-[calc(100dvh-64px)] sm:h-[calc(100dvh-72px)]">
           <section
             className="sticky top-[64px] sm:top-[72px] h-[calc(100dvh-64px)] sm:h-[calc(100dvh-72px)] overflow-hidden bg-gray-800"
             style={{ zIndex: 6 }}
