@@ -98,23 +98,36 @@ export default function Index() {
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Eagerly play the banner video — it's above the fold
+  // Banner video: don't call play() on mount — iOS (Low Power/Data/Reduce Motion) silently rejects the first play() attempted before user activation, which leaves the poster stuck.
+  // Instead, listen for any first user gesture and call play() from inside that handler. As soon as one play() succeeds, all listeners are detached.
   useEffect(() => {
     const v = video1Ref.current;
     if (!v) return;
-    // readyState >= 2 (HAVE_CURRENT_DATA) means the first frame is decoded — loadeddata may have already fired
+
+    // Fade in the video as soon as its first frame is decoded (may fire before or after our listeners resolve)
     if (v.readyState >= 2) {
       setVideo1Loaded(true);
     } else {
       v.addEventListener('loadeddata', () => setVideo1Loaded(true), { once: true });
     }
-    v.play().catch(() => {
-      const playOnInteraction = () => {
-        v.play().catch(() => { /* silent */ });
-      };
-      document.addEventListener('click', playOnInteraction, { once: true });
-      document.addEventListener('touchstart', playOnInteraction, { once: true });
+
+    const activationEvents = ['touchstart', 'pointerdown', 'click', 'scroll', 'keydown'] as const;
+
+    const detach = () => {
+      activationEvents.forEach((evt) => {
+        document.removeEventListener(evt, tryPlay);
+      });
+    };
+
+    const tryPlay = () => {
+      v.play().then(detach).catch(() => { /* keep listeners; next activation retries */ });
+    };
+
+    activationEvents.forEach((evt) => {
+      document.addEventListener(evt, tryPlay, { passive: true });
     });
+
+    return detach;
   }, []);
 
   // Lazy-load Video2/Video3 — only fetch their bytes once the section is ~600px from the viewport
