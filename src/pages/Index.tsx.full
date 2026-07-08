@@ -1534,7 +1534,7 @@ export default function Index() {
           {/* Alternating Picture/Text Features Section - UPDATED: Simple alternating layout, no white background */}
           <section id="features-section" className="py-20" style={{backgroundColor: '#E1F6F4'}}>
             <div className="w-full">
-              <div className="text-center mb-16 px-4 sm:px-6 mt-2">
+              <div className="text-center mb-16 px-4 sm:px-6 ">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{color: '#182C64'}}>
                   Everything you need in <span style={{color: '#8C15E9'}}>one app</span>
                 </h2>

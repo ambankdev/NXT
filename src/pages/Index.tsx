@@ -1140,13 +1140,13 @@ export default function Index() {
         </div>
 
         {/* Container for remaining content — no explicit z-index so the sticky videos stay on top until the user fully scrolls past them */}
-        <div className="relative bg-white">
+        <div className="relative bg-white pb-5">
           {/* Credit Cards Section */}
           <section id="credit-cards-section" className="pb-24 pt-0 sm:pt-12">
             <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
               <ScrollReveal animation="fade-up">
                 <div className="text-center mb-14">
-                  <h2 className="text-4xl md:text-5xl font-bold mb-3" style={{color: '#182C64'}}>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-3 mt-2" style={{color: '#182C64'}}>
                     Explore <span style={{color: '#8C15E9'}}>NXT</span> credit cards
                   </h2>
                   <p className="text-xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
