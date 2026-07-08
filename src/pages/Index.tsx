@@ -1140,7 +1140,7 @@ export default function Index() {
         </div>
 
         {/* Container for remaining content — no explicit z-index so the sticky videos stay on top until the user fully scrolls past them */}
-        <div className="relative bg-white pb-5">
+        <div className="relative bg-white pb-20">
           {/* Credit Cards Section */}
           <section id="credit-cards-section" className="pb-24 pt-0 sm:pt-12">
             <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
