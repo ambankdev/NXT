@@ -945,7 +945,7 @@ export default function Index() {
       </div>
 
       {/* Top Banner Video */}
-      <div className="w-full h-screen relative overflow-hidden">
+      <div className="w-full h-[100dvh] relative overflow-hidden">
         <div className="video-container">
           {!video1Loaded && <LoadingSpinner />}
           <video
@@ -1078,10 +1078,10 @@ export default function Index() {
         </section>
 
         {/* First Marketing Banner Section — wrapped so the sticky range ends with the wrapper instead of extending to the page footer */}
-        <div ref={video2SectionRef} className="relative h-screen">
+        <div ref={video2SectionRef} className="relative h-[100dvh]">
           <section
             id="marketing-section"
-            className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] overflow-hidden bg-gray-900"
+            className="sticky top-[64px] sm:top-[72px] h-[calc(100dvh-64px)] sm:h-[calc(100dvh-72px)] overflow-hidden bg-gray-900"
             style={{ zIndex: 5 }}
           >
             <div className="video-container">
@@ -1103,9 +1103,9 @@ export default function Index() {
         </div>
 
         {/* Second Marketing Banner Section */}
-        <div ref={video3SectionRef} className="relative h-screen">
+        <div ref={video3SectionRef} className="relative h-[100dvh]">
           <section
-            className="sticky top-[64px] sm:top-[72px] h-[calc(100vh-64px)] sm:h-[calc(100vh-72px)] overflow-hidden bg-gray-800"
+            className="sticky top-[64px] sm:top-[72px] h-[calc(100dvh-64px)] sm:h-[calc(100dvh-72px)] overflow-hidden bg-gray-800"
             style={{ zIndex: 6 }}
           >
             <div className="video-container">
