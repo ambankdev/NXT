@@ -816,6 +816,7 @@ export default function Index() {
         .card-carousel-stage {
           position: relative;
           height: 620px;
+          paddig-bottom: 10px;
           margin: 0 auto;
           max-width: 1100px;
           cursor: grab;
@@ -894,7 +895,7 @@ export default function Index() {
           .card-carousel-slide.is-left { transform: translateX(-135%) scale(0.78); }
         }
         @media (max-width: 768px) {
-          .card-carousel-stage { height: 460px;paddig-bottom: 10px; }
+          .card-carousel-stage { height: 460px; }
           .card-carousel-slide { width: 220px; }
           /* All non-active states on mobile sit at the same position + scale as the center, so the active card just crossfades in instead of growing */
           .card-carousel-slide.is-right,
