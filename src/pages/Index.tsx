@@ -817,6 +817,7 @@ export default function Index() {
           position: relative;
           height: 620px;
           paddig-bottom: 10px;
+          margin-bottom: 10px;
           margin: 0 auto;
           max-width: 1100px;
           cursor: grab;
