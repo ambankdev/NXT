@@ -1174,8 +1174,8 @@ export default function Index() {
           <section id="credit-cards-section" className="pt-0 sm:pt-12" style={{ paddingBottom: '24px' }}>
             <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
               <ScrollReveal animation="fade-up">
-                <div className="text-center mb-14">
-                  <h2 className="text-4xl md:text-5xl font-bold mb-3 mt-2" style={{color: '#182C64'}}>
+                <div className="text-center mb-14 mt-2">
+                  <h2 className="text-4xl md:text-5xl font-bold mb-3 mt-4" style={{color: '#182C64'}}>
                     Explore <span style={{color: '#8C15E9'}}>NXT</span> credit cards
                   </h2>
                   <p className="text-xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
