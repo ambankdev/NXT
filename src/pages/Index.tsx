@@ -1179,7 +1179,7 @@ export default function Index() {
                     Explore <span style={{color: '#8C15E9'}}>NXT</span> credit cards
                   </h2>
                   <p className="text-xl max-w-3xl mx-auto" style={{color: '#182C64'}}>
-                    Your card. Your <span style={{color: '#2E74EA', fontWeight: '600'}}>NXT</span> move. Your style.
+                    Your card. Your <span style={{color: '#182C64', fontWeight: '600'}}>NXT</span> move. Your style.
                   </p>
                 </div>
               </ScrollReveal>
