@@ -1076,9 +1076,17 @@ export default function Index() {
                 </h2>
               </ScrollReveal>
               
-              <div className="flex flex-col sm:flex-row gap-16 justify-center items-center max-w-5xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 justify-center items-center max-w-5xl mx-auto">
+                {/* Left: single QR code */}
                 <ScrollReveal animation="fade-up" delay={150}>
-                  <div className="flex flex-col items-center">
+                  <div className="qr-code-container">
+                    <img src="/assets/images/qr-appstore.png" alt="Download NXT app QR code" className="w-40 h-40 rounded" />
+                  </div>
+                </ScrollReveal>
+
+                {/* Right: two stacked store buttons */}
+                <ScrollReveal animation="fade-up" delay={300}>
+                  <div className="flex flex-col gap-4">
                     <a href="#" className="download-container-appstore flex items-center justify-center space-x-2 bg-white text-[#182C64] px-4 py-4 rounded-xl hover:bg-gray-50 transition-colors shadow-lg w-64 h-24">
                       <img src="/assets/images/apple.png" alt="App Store" className="w-24 h-24 object-contain ml-1"/>
                       <div className="text-left ml-1">
@@ -1086,14 +1094,6 @@ export default function Index() {
                         <div className="text-sm font-semibold">App Store</div>
                       </div>
                     </a>
-                    <div className="qr-code-container" style={{marginTop: "24px"}}>
-                      <img src="/assets/images/qr-appstore.png" alt="App Store QR Code" className="w-32 h-32 rounded" />
-                    </div>
-                  </div>
-                </ScrollReveal>
-                
-                <ScrollReveal animation="fade-up" delay={300}>
-                  <div className="flex flex-col items-center">
                     <a href="#" className="download-container-googleplay flex items-center justify-center space-x-2 bg-white text-[#182C64] px-4 py-4 rounded-xl hover:bg-gray-50 transition-colors shadow-lg w-64 h-24">
                       <img src="/assets/images/android.png" alt="Google Play" className="w-24 h-24 object-contain ml-1"/>
                       <div className="text-left ml-1">
@@ -1101,9 +1101,6 @@ export default function Index() {
                         <div className="text-sm font-semibold">Google Play</div>
                       </div>
                     </a>
-                    <div className="qr-code-container" style={{marginTop: "24px"}}>
-                      <img src="/assets/images/qr-googleplay.png" alt="Google Play QR Code" className="w-32 h-32 rounded" />
-                    </div>
                   </div>
                 </ScrollReveal>
               </div>
