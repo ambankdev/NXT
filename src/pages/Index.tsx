@@ -669,20 +669,13 @@ export default function Index() {
         /* Credit Cards Section */
         .credit-card-tile {
           position: relative;
-          background: white;
-          border-radius: 24px;
-          padding: 28px;
-          border: 1px solid rgba(46, 116, 234, 0.15);
-          box-shadow: 0 10px 30px -10px rgba(24, 44, 100, 0.15);
-          transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+          transition: transform 0.4s ease;
           height: 100%;
           display: flex;
           flex-direction: column;
-          overflow: hidden;
         }
         .credit-card-tile:hover {
           transform: translateY(-8px);
-          box-shadow: 0 30px 60px -15px rgba(46, 116, 234, 0.35);
         }
         .credit-card-image-wrap {
           position: relative;
@@ -719,6 +712,15 @@ export default function Index() {
           flex: 1;
           display: flex;
           flex-direction: column;
+          background: white;
+          border: 1px solid rgba(46, 116, 234, 0.15);
+          border-radius: 24px;
+          padding: 28px;
+          box-shadow: 0 10px 30px -10px rgba(24, 44, 100, 0.15);
+          transition: box-shadow 0.4s ease;
+        }
+        .credit-card-tile:hover .credit-card-body {
+          box-shadow: 0 30px 60px -15px rgba(46, 116, 234, 0.35);
         }
         .credit-card-name {
           font-size: 1.6rem;
@@ -779,25 +781,14 @@ export default function Index() {
           box-shadow: 0 10px 25px -5px rgba(46, 116, 234, 0.5);
         }
         @media (max-width: 768px) {
-          /* On mobile the white pill wraps only the text block (name + tagline + benefits + button), not the card image */
-          .credit-card-tile {
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            padding: 0;
-            border-radius: 0;
-            overflow: visible;
-          }
-          .credit-card-tile:hover {
-            transform: none;
-            box-shadow: none;
+          /* Body pill is smaller on mobile, and the hover lift is disabled */
+          .credit-card-tile:hover { transform: none; }
+          .credit-card-tile:hover .credit-card-body {
+            box-shadow: 0 10px 30px -10px rgba(24, 44, 100, 0.15);
           }
           .credit-card-body {
-            background: white;
-            border: 1px solid rgba(46, 116, 234, 0.15);
             border-radius: 18px;
             padding: 14px;
-            box-shadow: 0 10px 30px -10px rgba(24, 44, 100, 0.15);
           }
           .credit-card-image-wrap { margin-bottom: 14px; }
           .credit-card-image { border-radius: 10px; }
