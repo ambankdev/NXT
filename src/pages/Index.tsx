@@ -1324,7 +1324,7 @@ export default function Index() {
           {/* Desktop Layout */}
           <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
             <div className="flex items-center">
-              <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-10 w-auto" />
+              <img src="/assets/images/logo-white.png" alt="NXT Logo" className=" w-auto" style={{height: '5rem'}}/>
             </div>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
