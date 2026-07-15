@@ -835,14 +835,14 @@ export default function Index() {
           filter: none;
         }
         .card-carousel-slide.is-right {
-          transform: translateX(40%) scale(0.82);
+          transform: translateX(60%) scale(0.82);
           opacity: 0.55;
           z-index: 2;
           filter: blur(0.5px);
           pointer-events: none;
         }
         .card-carousel-slide.is-left {
-          transform: translateX(-140%) scale(0.82);
+          transform: translateX(-160%) scale(0.82);
           opacity: 0.55;
           z-index: 2;
           filter: blur(0.5px);
@@ -883,8 +883,8 @@ export default function Index() {
         @media (max-width: 1024px) {
           .card-carousel-stage { height: 600px; }
           .card-carousel-slide { width: 340px; }
-          .card-carousel-slide.is-right { transform: translateX(35%) scale(0.78); }
-          .card-carousel-slide.is-left { transform: translateX(-135%) scale(0.78); }
+          .card-carousel-slide.is-right { transform: translateX(55%) scale(0.78); }
+          .card-carousel-slide.is-left { transform: translateX(-155%) scale(0.78); }
         }
         @media (max-width: 768px) {
           .card-carousel-stage { height: 460px; }
