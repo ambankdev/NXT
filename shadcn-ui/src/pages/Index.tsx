@@ -247,12 +247,12 @@ export default function Index() {
         .pricing-cards-grid { align-items: start; }
         .download-container-appstore {
           transition: all 0.3s ease;
-          border: 2px solid transparent;
+          // border: 2px solid transparent;
         }
         .download-container-appstore:hover { border: 2px solid #2E74EA; }
         .download-container-googleplay {
           transition: all 0.3s ease;
-          border: 2px solid transparent;
+          // border: 2px solid transparent;
         }
         .download-container-googleplay:hover { border: 2px solid #2E74EA; }
         .qr-code-container {
