@@ -249,12 +249,12 @@ export default function Index() {
           transition: all 0.3s ease;
           /*border: 2px solid transparent;*/
         }
-        .download-container-appstore:hover { border: 2px solid #2E74EA; }
+        /*.download-container-appstore:hover { border: 2px solid #2E74EA; }*/
         .download-container-googleplay {
           transition: all 0.3s ease;
           /*border: 2px solid transparent;*/
         }
-        .download-container-googleplay:hover { border: 2px solid #2E74EA; }
+        /*.download-container-googleplay:hover { border: 2px solid #2E74EA; }*/
         .qr-code-container {
           margin-top: 12px;
           padding: 8px;
