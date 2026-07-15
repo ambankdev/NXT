@@ -1353,7 +1353,7 @@ export default function Index() {
             <div className="flex flex-col space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-8 w-auto" />
+                  <img src="/assets/images/logo-white.png" alt="NXT Logo" className="h-8 w-auto" style={{height: '4rem'}} />
                 </div>
                 <div className="flex space-x-4">
                   <a href="https://www.facebook.com/share/1avvD7axin" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
