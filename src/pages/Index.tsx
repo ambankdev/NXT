@@ -502,7 +502,7 @@ export default function Index() {
         .feature-image:hover { transform: scale(1.26); }
         .logo-clickable { cursor: pointer; transition: all 0.3s ease; }
         .logo-clickable:hover { transform: scale(1.05); }
-        .logo-fade { transition: opacity 0.3s ease; min-height:60px; }
+        .logo-fade { transition: opacity 0.3s ease; min-height:80px; }
         .nav-menu-item { transition: color 0.3s ease; }
         .nav-menu-item:hover { color: rgba(255, 255, 255, 0.7) !important; }
         .nav-menu-item.scrolled { transition: color 0.3s ease; }
