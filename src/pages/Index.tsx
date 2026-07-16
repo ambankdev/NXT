@@ -216,7 +216,9 @@ export default function Index() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const stickyOffset = window.matchMedia('(max-width: 768px)').matches ? 64 : 72;
+      // Measure the header at click time — it's grown taller because the logo has a min-height override, so the old 64/72 constants land the target under the header.
+      const header = document.querySelector('header');
+      const stickyOffset = header?.offsetHeight ?? (window.matchMedia('(max-width: 768px)').matches ? 64 : 72);
       const top = element.getBoundingClientRect().top + window.scrollY - stickyOffset;
       window.scrollTo({ top, behavior: 'smooth' });
     }
