@@ -1065,9 +1065,9 @@ export default function Index() {
               </div>
               <div className="mobile-legal-links">
                 <Link to="/rights-and-duties" className="text-white hover:text-gray-300 transition-colors">Rights and Duties</Link>
-                <span className="text-white">•</span>
+                {/* <span className="text-white">•</span> */}
                 <Link to="/terms-and-conditions" className="text-white hover:text-gray-300 transition-colors">Terms and Conditions</Link>
-                <span className="text-white">•</span>
+                {/* <span className="text-white">•</span> */}
                 <Link to="/privacy-policy" className="text-white hover:text-gray-300 transition-colors">Privacy and Cookies</Link>
               </div>
               <div className="text-white text-sm text-center">©Copyright 2026 NXT. All rights reserved.</div>

@@ -181,11 +181,11 @@ export default function PrivacyPolicy() {
                 <Link to="/rights-and-duties" className="text-white hover:text-gray-300 transition-colors text-xs">
                   Rights and Duties
                 </Link>
-                <span className="text-white text-xs">•</span>
+                {/* <span className="text-white text-xs">•</span> */}
                 <Link to="/terms-and-conditions" className="text-white hover:text-gray-300 transition-colors text-xs">
                   Terms and Conditions
                 </Link>
-                <span className="text-white text-xs">•</span>
+                {/* <span className="text-white text-xs">•</span> */}
                 <Link to="/privacy-policy" className="text-white hover:text-gray-300 transition-colors text-xs">
                   Privacy and Cookies
                 </Link>
