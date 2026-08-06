@@ -31,10 +31,10 @@ export default function Index() {
   const [video2Ready, setVideo2Ready] = useState(false);
   const [video3Ready, setVideo3Ready] = useState(false);
 
-  // Track viewport so we render only one source (desktop OR mobile) per slot
-  const [isMobileViewport, setIsMobileViewport] = useState(
-    typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
-  );
+  // Track viewport so we render only one source (desktop OR mobile) per slot.
+  // Starts false on both server and client so the prerendered HTML hydrates
+  // cleanly; the matchMedia effect below corrects it on mount.
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
 
   // Cookie consent state
   const [showCookieBanner, setShowCookieBanner] = useState(false);
@@ -998,7 +998,27 @@ export default function Index() {
           />
         </div>
         <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-          <div className="text-center text-white"></div>
+          <div className="text-center text-white">
+            {/*
+              The hero is a silent looping video with no text, which left the
+              page with no <h1> and no text alternative. `sr-only` keeps the
+              design untouched while giving screen readers, Googlebot and
+              answer engines the page's subject up front. Every claim here is
+              repeated visibly further down the page — replace this with a
+              visible headline over the video whenever design allows.
+            */}
+            <h1 className="sr-only">
+              NXT — digital wallet, instant money transfers and credit cards
+            </h1>
+            <p className="sr-only">
+              NXT is a mobile wallet app. Send money to people nearby using your
+              phone's location or by scanning a QR code, split bills with friends
+              and track who has paid, top up your account in seconds or share a
+              top-up link, and check your balance from the login screen without
+              signing in. NXT also offers Visa Platinum Euro, Mastercard Titanium,
+              Visa Infinite and Visa LBP credit cards.
+            </p>
+          </div>
         </div>
       </div>
 

@@ -4,11 +4,11 @@ import path from "path";
 import { viteSourceLocator } from "@metagptx/vite-plugin-source-locator";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [
-    viteSourceLocator({
-      prefix: "mgx",
-    }),
+    // Source locator injects browser-only tracking attributes — skip it for the
+    // prerender bundle so the server render matches the client one.
+    ...(isSsrBuild ? [] : [viteSourceLocator({ prefix: "mgx" })]),
     react(),
   ],
   resolve: {

@@ -1,0 +1,31 @@
+# NXT
+
+> NXT is a mobile digital wallet app. It lets you send money to people nearby
+> using your phone's location or by scanning a QR code, split bills and track
+> who has paid, top up your account or share a top-up link, and check your
+> balance from the login screen without signing in. NXT also issues Visa and
+> Mastercard credit cards.
+
+Contact: connect@mynxt.com
+
+## App features
+
+- **Transfer by Location** — send money in seconds to any NXT user nearby using the phone's location, with no account numbers. Transfers can be tracked and actioned from "My Bag".
+- **Transfer via QR** — scan a recipient's QR code and send money without cash or card.
+- **Top-up** — top up your account in seconds, or share a link so someone else can top you up.
+- **Bill Split** — split bills with friends, send instant requests and track payments.
+- **Quick Balance** — check your preferred accounts from the login screen by drag and drop, without logging in.
+
+## Credit cards
+
+- **Visa Platinum Euro** — access to over 25 airport lounges, medical and travel assistance, extended warranty on purchases, purchase protection for up to 12 months, discounts through visamiddleeast.com, global emergency assistance.
+- **Mastercard Titanium** — access to over 10 airport lounges, benefits with Booking.com, IHG Hotels & Resorts and selected travel partners, dining and lifestyle experiences through Priceless.com, international car rental offers.
+- **Visa Infinite** — access to over 1,300 airport lounges, concierge service, dedicated relationship manager, travel insurance, extended warranty, purchase protection for up to 12 months, fraudulent card misuse protection, global emergency assistance.
+- **Visa LBP** — worldwide Visa acceptance, contactless payments, real-time spend notifications, 24/7 fraud protection.
+
+## Pages
+
+- [Home](https://www.mynxt.com/): app features, credit cards, download links.
+- [Rights and Duties](https://www.mynxt.com/rights-and-duties): customer rights and obligations.
+- [Terms and Conditions](https://www.mynxt.com/terms-and-conditions): terms governing use of the app, wallet and cards.
+- [Privacy and Cookies](https://www.mynxt.com/privacy-policy): data collection, cookies and data rights.

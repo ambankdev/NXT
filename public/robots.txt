@@ -1,0 +1,71 @@
+# https://www.mynxt.com/robots.txt
+
+# --- Default: everything is crawlable -------------------------------------
+User-agent: *
+Allow: /
+
+# --- Search engines -------------------------------------------------------
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# --- Answer / AI engines --------------------------------------------------
+# Allowed on purpose: these are what let NXT be quoted in ChatGPT, Claude,
+# Perplexity and Google AI Overviews. Switch any group to "Disallow: /" if
+# NXT decides it does not want that engine using the site.
+
+# OpenAI - model training
+User-agent: GPTBot
+Allow: /
+
+# OpenAI - ChatGPT search index
+User-agent: OAI-SearchBot
+Allow: /
+
+# OpenAI - live fetch triggered by a user's question
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic - index / training
+User-agent: ClaudeBot
+Allow: /
+
+# Anthropic - live fetch triggered by a user's question
+User-agent: Claude-User
+Allow: /
+
+# Perplexity - index
+User-agent: PerplexityBot
+Allow: /
+
+# Perplexity - live fetch triggered by a user's question
+User-agent: Perplexity-User
+Allow: /
+
+# Google - opt-in token for Gemini grounding and AI Overviews
+User-agent: Google-Extended
+Allow: /
+
+# Apple - opt-in token for Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+
+# Apple - Siri and Spotlight suggestions
+User-agent: Applebot
+Allow: /
+
+# Meta AI
+User-agent: meta-externalagent
+Allow: /
+
+# Amazon - Alexa / Rufus
+User-agent: Amazonbot
+Allow: /
+
+# --- Sitemap --------------------------------------------------------------
+Sitemap: https://www.mynxt.com/sitemap.xml
