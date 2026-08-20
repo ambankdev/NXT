@@ -18,6 +18,21 @@ export const SITE_NAME = 'NXT';
 export const CONTACT_EMAIL = 'connect@mynxt.com';
 export const DEFAULT_OG_IMAGE = '/assets/images/logo-color.png';
 
+/**
+ * App store listings. Fill these in and the download buttons on the homepage
+ * become real links, and `installUrl` appears in the MobileApplication schema.
+ *
+ * Leave a string empty and its button renders as a non-clickable image rather
+ * than a dead `href="#"` — better for users and it keeps Search Console from
+ * reporting a link that goes nowhere.
+ *
+ * Expected shapes:
+ *   APP_STORE_URL = 'https://apps.apple.com/lb/app/<slug>/id<numeric-id>'
+ *   PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=<package.name>'
+ */
+export const APP_STORE_URL = '';
+export const PLAY_STORE_URL = '';
+
 export const SOCIAL_PROFILES = [
   'https://www.facebook.com/share/1avvD7axin',
   'https://www.instagram.com/nxt_leb/',
@@ -202,6 +217,11 @@ function breadcrumbNode(route: RouteSeo) {
   };
 }
 
+/** Whichever store links are configured, in a stable order. */
+export function installUrls(): string[] {
+  return [APP_STORE_URL, PLAY_STORE_URL].filter(Boolean);
+}
+
 function mobileAppNode() {
   return {
     '@type': 'MobileApplication',
@@ -212,9 +232,10 @@ function mobileAppNode() {
     description:
       'NXT is a mobile wallet for sending money by location or QR code, splitting bills, topping up your account and checking your balance without logging in.',
     publisher: { '@id': ORGANIZATION_ID },
-    // No aggregateRating and no offers: both would be fabricated until the
-    // store listings are live. Add `installUrl` once the App Store / Google
-    // Play links in the download section point somewhere real.
+    // installUrl appears automatically once the store constants above are set.
+    // Still deliberately absent: aggregateRating and offers — both would be
+    // fabricated until there are real store listings with real review counts.
+    ...(installUrls().length ? { installUrl: installUrls() } : {}),
     featureList: [
       'Transfer by Location',
       'Transfer via QR',

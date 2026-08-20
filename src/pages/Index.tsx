@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollReveal from '@/components/ScrollReveal';
 import CardApplicationDialog from '@/components/CardApplicationDialog';
+import StoreButton from '@/components/StoreButton';
+import { APP_STORE_URL, PLAY_STORE_URL } from '@/seo/site';
 
 export default function Index() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -1109,12 +1111,18 @@ export default function Index() {
                 {/* Right: two stacked store buttons */}
                 <ScrollReveal animation="fade-up" delay={300}>
                   <div className="flex flex-col gap-4">
-                    <a href="#" className="download-container-appstore block bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors shadow-lg w-64 h-24">
-                      <img src="/assets/images/apple.png" alt="App Store" className="w-full h-full object-cover" />
-                    </a>
-                    <a href="#" className="download-container-googleplay block bg-white rounded-xl overflow-hidden hover:bg-gray-50 transition-colors shadow-lg w-64 h-24">
-                      <img src="/assets/images/android.png" alt="Google Play" className="w-full h-full object-cover" />
-                    </a>
+                    <StoreButton
+                      href={APP_STORE_URL}
+                      className="download-container-appstore"
+                      image="/assets/images/apple.png"
+                      alt="Download NXT on the App Store"
+                    />
+                    <StoreButton
+                      href={PLAY_STORE_URL}
+                      className="download-container-googleplay"
+                      image="/assets/images/android.png"
+                      alt="Get NXT on Google Play"
+                    />
                   </div>
                 </ScrollReveal>
               </div>
