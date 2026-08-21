@@ -30,8 +30,8 @@ export const DEFAULT_OG_IMAGE = '/assets/images/logo-color.png';
  *   APP_STORE_URL = 'https://apps.apple.com/lb/app/<slug>/id<numeric-id>'
  *   PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=<package.name>'
  */
-export const APP_STORE_URL = '';
-export const PLAY_STORE_URL = '';
+export const APP_STORE_URL = 'https://apps.apple.com/lb/app/nxt-by-am-bank/id6758016416';
+export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.ambank_app';
 
 export const SOCIAL_PROFILES = [
   'https://www.facebook.com/share/1avvD7axin',
