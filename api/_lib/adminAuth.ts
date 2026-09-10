@@ -17,7 +17,7 @@ const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // one working day
 
 function adminPassword(): string {
   const pw = process.env.ADMIN_PASSWORD ?? '';
-  if (pw.length < 12) {
+  if (pw.length < 10) {
     // Refuse to run rather than protect applicant data with a weak secret.
     throw new HttpError(503, 'Admin access is not configured.');
   }
