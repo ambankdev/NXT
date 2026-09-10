@@ -16,7 +16,17 @@ export default async function handler(_req: ApiRequest, res: ApiResponse) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
   const bucket = process.env.SUPABASE_CV_BUCKET || 'cvs';
 
+  // Names only — never values. A typo like SUPABSE_URL or a VITE_ prefix shows
+  // up here immediately, and an empty list means nothing was saved to THIS
+  // Vercel project at all.
+  const visibleNames = Object.keys(process.env)
+    .filter((k) => /supa|nxt|cv/i.test(k))
+    .sort();
+
   const report: Record<string, unknown> = {
+    supabaseishVariablesThisFunctionCanSee: visibleNames,
+    vercelProject: process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL ?? 'unknown',
+    vercelEnv: process.env.VERCEL_ENV ?? 'unknown',
     SUPABASE_URL: {
       present: url.length > 0,
       looksLikeSupabaseUrl: /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url),
