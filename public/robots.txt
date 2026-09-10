@@ -1,8 +1,11 @@
 # https://www.mynxt.com/robots.txt
 
-# --- Default: everything is crawlable -------------------------------------
+# --- Default: everything is crawlable except internals --------------------
+# /admin also ships a noindex tag; this keeps crawlers off it entirely.
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/
 
 # --- Search engines -------------------------------------------------------
 User-agent: Googlebot

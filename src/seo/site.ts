@@ -109,6 +109,13 @@ export const ROUTES: RouteSeo[] = [
 /** Routes that get prerendered but must never be indexed. */
 export const NOINDEX_ROUTES: RouteSeo[] = [
   {
+    path: '/admin',
+    title: 'Submissions | NXT',
+    description: 'Internal.',
+    lastmod: '2026-09-10',
+    noindex: true,
+  },
+  {
     path: '/404',
     title: 'Page Not Found | NXT',
     description: 'The page you are looking for does not exist.',

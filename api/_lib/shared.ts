@@ -11,6 +11,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 export interface ApiRequest {
   method?: string;
   body?: unknown;
+  query?: Record<string, string | string[] | undefined>;
   headers: Record<string, string | string[] | undefined>;
 }
 export interface ApiResponse {
