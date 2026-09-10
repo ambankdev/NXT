@@ -143,6 +143,12 @@ export default function RightsAndDuties() {
 
             {/* Legal Tabs */}
             <div className="flex space-x-6">
+              <Link to="/careers" className="text-white hover:text-gray-300 transition-colors text-sm">
+                Careers
+              </Link>
+              <Link to="/contact" className="text-white hover:text-gray-300 transition-colors text-sm">
+                Contact us
+              </Link>
               <Link to="/rights-and-duties" className="text-white hover:text-gray-300 transition-colors text-sm">
                 Rights and Duties
               </Link>
@@ -198,6 +204,12 @@ export default function RightsAndDuties() {
 
               {/* Second Line: All Legal Links with Dynamic Font Sizing */}
               <div className="flex justify-center items-center gap-2 flex-wrap text-center">
+                <Link to="/careers" className="text-white hover:text-gray-300 transition-colors text-xs">
+                  Careers
+                </Link>
+                <Link to="/contact" className="text-white hover:text-gray-300 transition-colors text-xs">
+                  Contact us
+                </Link>
                 <Link to="/rights-and-duties" className="text-white hover:text-gray-300 transition-colors text-xs">
                   Rights and Duties
                 </Link>

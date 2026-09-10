@@ -4,6 +4,8 @@ import Index from './pages/Index';
 import RightsAndDuties from './pages/RightsAndDuties';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Careers from './pages/Careers';
+import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import RouteMeta from './components/RouteMeta';
 
@@ -21,6 +23,8 @@ export function AppRoutes() {
         <Route path="/rights-and-duties" element={<RightsAndDuties />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

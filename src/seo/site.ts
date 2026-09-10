@@ -81,6 +81,22 @@ export const ROUTES: RouteSeo[] = [
     breadcrumb: 'Terms and Conditions',
   },
   {
+    path: '/careers',
+    title: 'Careers | NXT',
+    description:
+      'Work with NXT. Send us your details and your CV and we will get in touch when a role matches your profile.',
+    lastmod: '2026-09-08',
+    breadcrumb: 'Careers',
+  },
+  {
+    path: '/contact',
+    title: 'Contact us | NXT',
+    description:
+      'Get in touch with the NXT team. Send us a message with your question and we will come back to you as soon as possible.',
+    lastmod: '2026-09-08',
+    breadcrumb: 'Contact us',
+  },
+  {
     path: '/privacy-policy',
     title: 'Privacy and Cookies Policy | NXT',
     description:
@@ -190,10 +206,15 @@ function websiteNode() {
   };
 }
 
+/** More specific WebPage subtypes where schema.org has one that fits. */
+const PAGE_TYPES: Record<string, string> = {
+  '/contact': 'ContactPage',
+};
+
 function webPageNode(route: RouteSeo) {
   const url = absoluteUrl(route.path);
   return {
-    '@type': route.path === '/' ? 'WebPage' : 'WebPage',
+    '@type': PAGE_TYPES[route.path] ?? 'WebPage',
     '@id': `${url}#webpage`,
     url,
     name: route.title,

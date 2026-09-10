@@ -1371,6 +1371,8 @@ export default function Index() {
               </a>
             </div>
             <div className="flex space-x-6">
+              <Link to="/careers" className="text-white hover:text-gray-300 transition-colors text-sm">Careers</Link>
+              <Link to="/contact" className="text-white hover:text-gray-300 transition-colors text-sm">Contact us</Link>
               <Link to="/rights-and-duties" className="text-white hover:text-gray-300 transition-colors text-sm">Rights and Duties</Link>
               <Link to="/terms-and-conditions" className="text-white hover:text-gray-300 transition-colors text-sm">Terms and Conditions</Link>
               <Link to="/privacy-policy" className="text-white hover:text-gray-300 transition-colors text-sm">Privacy and Cookies</Link>
@@ -1401,6 +1403,8 @@ export default function Index() {
                 </div>
               </div>
               <div className="mobile-legal-links">
+                <Link to="/careers" className="text-white hover:text-gray-300 transition-colors">Careers</Link>
+                <Link to="/contact" className="text-white hover:text-gray-300 transition-colors">Contact us</Link>
                 <Link to="/rights-and-duties" className="text-white hover:text-gray-300 transition-colors">Rights and Duties</Link>
                 {/* <span className="text-white">•</span> */}
                 <Link to="/terms-and-conditions" className="text-white hover:text-gray-300 transition-colors">Terms and Conditions</Link>
