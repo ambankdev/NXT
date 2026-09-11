@@ -7,7 +7,7 @@ interface StoreButtonProps {
 }
 
 const BADGE_CLASSES =
-  'block bg-white rounded-xl overflow-hidden shadow-lg w-64 h-24';
+  'block bg-white rounded-xl overflow-hidden w-64 h-24';
 
 /**
  * App Store / Google Play badge.
