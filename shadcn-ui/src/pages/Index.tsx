@@ -621,7 +621,7 @@ export default function Index() {
                 
                 <ScrollReveal animation="fade-up" delay={300}>
                   <div className="flex flex-col items-center">
-                    <a href="#" className="download-container-googleplay flex items-center justify-center space-x-2 bg-white text-[#182C64] px-4 py-4 rounded-xl hover:bg-gray-50 transition-colors shadow-lg w-64 h-24">
+                    <a href="#" className="download-container-googleplay flex items-center justify-center space-x-2 bg-white text-[#182C64] px-4 py-4 rounded-xl hover:bg-gray-50 transition-colors w-64 h-24">
                       <img src="/assets/images/android.png" alt="Google Play" className="w-24 h-24 object-contain ml-1"/>
                       <div className="text-left ml-1">
                         <div className="text-xs">Get it on</div>
