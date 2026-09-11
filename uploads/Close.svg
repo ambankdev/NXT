@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:479cb5432ab9ba3ace00a13dfa48fd76ac9d9f9acb655a9ca54c11cf03acf5d4
-size 622
+<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="7.5" cy="7.5" r="7.25" fill="white" stroke="url(#paint0_linear_3632_13682)" stroke-width="0.5"/>
+<path d="M10.7498 10.75L7.49976 7.5M7.49976 7.5L4.24976 4.25M7.49976 7.5L10.7498 4.25M7.49976 7.5L4.24976 10.75" stroke="#182C64" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="paint0_linear_3632_13682" x1="2.5" y1="12.5" x2="13" y2="2" gradientUnits="userSpaceOnUse">
+<stop stop-color="#182C64"/>
+<stop offset="1" stop-color="#2E74EA"/>
+</linearGradient>
+</defs>
+</svg>

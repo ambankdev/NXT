@@ -1,3 +1,23 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:61b83f0fc3402757c7b68b528e9e2a91322a3844b7cb34b153aa75a12a2cbb5e
-size 961
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NXT">
+  <!--
+    Tab icon for NXT.
+
+    The full logo is a wide wordmark ("NXT / by AM Bank") and turns to mush at
+    16px, so this uses the initial on the brand gradient instead — the same
+    #182C64 to #2E74EA used by the site's buttons and footer. The N is drawn as
+    a path rather than text so it renders identically everywhere, with no
+    dependence on an installed font, and it carries the logo's forward slant.
+  -->
+  <defs>
+    <linearGradient id="nxt" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#182C64"/>
+      <stop offset="1" stop-color="#2E74EA"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#nxt)"/>
+
+  <g transform="translate(6.8,0) skewX(-12)">
+    <path d="M14,50 L14,14 L24,14 L40,40 L40,14 L50,14 L50,50 L40,50 L24,24 L24,50 Z" fill="#ffffff"/>
+  </g>
+</svg>
