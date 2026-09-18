@@ -25,6 +25,17 @@ export default function Careers() {
   const [done, setDone] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  /** Checks one field when the user leaves it, rather than waiting for submit. */
+  const validateField = (field: 'mobile' | 'email', value: string) => {
+    const error = field === 'mobile' ? validateMobile(value) : validateEmail(value);
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (error) next[field] = error;
+      else delete next[field];
+      return next;
+    });
+  };
+
   const validate = () => {
     const next: Record<string, string> = {};
     const n = validateFullName(fullName); if (n) next.fullName = n;
@@ -103,8 +114,15 @@ export default function Careers() {
 
         <Field label="Mobile number" htmlFor="mobile" error={errors.mobile}>
           <input
-            id="mobile" type="tel" value={mobile} autoComplete="tel" disabled={submitting}
-            onChange={(e) => setMobile(e.target.value)}
+            id="mobile" type="tel" inputMode="tel" maxLength={16} value={mobile}
+            autoComplete="tel" disabled={submitting}
+            // Digits only, plus one optional leading "+" for an international prefix.
+            // Filtering here also catches pasted and autofilled values.
+            onChange={(e) => {
+              const raw = e.target.value;
+              setMobile((raw.trim().startsWith('+') ? '+' : '') + raw.replace(/\D/g, ''));
+            }}
+            onBlur={() => validateField('mobile', mobile)}
             className={inputClass}
             style={{ borderColor: errors.mobile ? '#dc2626' : '#cbd5e1' }}
           />
@@ -112,8 +130,11 @@ export default function Careers() {
 
         <Field label="E-mail address" htmlFor="email" error={errors.email}>
           <input
-            id="email" type="email" value={email} autoComplete="email" disabled={submitting}
-            onChange={(e) => setEmail(e.target.value)}
+            id="email" type="email" inputMode="email" maxLength={254} value={email}
+            autoComplete="email" disabled={submitting}
+            // An email address can never contain whitespace.
+            onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
+            onBlur={() => validateField('email', email)}
             className={inputClass}
             style={{ borderColor: errors.email ? '#dc2626' : '#cbd5e1' }}
           />
@@ -158,11 +179,7 @@ export default function Careers() {
             />
             <span className="text-sm text-gray-700">
               I agree that NXT may store and process my personal data and CV for recruitment
-              purposes, as described in the{' '}
-              <Link to="/privacy-policy" className="text-[#2E74EA] hover:underline">
-                Privacy and Cookies Policy
-              </Link>
-              .
+              purposes.
             </span>
           </label>
           {errors.consent && (
