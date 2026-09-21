@@ -12,19 +12,14 @@ import {
   supabaseAdmin,
 } from '../_lib/shared.js';
 import { requireAdmin } from '../_lib/adminAuth.js';
+import {
+  APPLICATION_SEARCH_COLUMNS,
+  MESSAGE_SEARCH_COLUMNS,
+  applyFilters,
+  queryParam,
+} from '../_lib/adminQuery.js';
 
 const MAX_LIMIT = 500;
-
-function q(req: ApiRequest, key: string): string {
-  const v = req.query?.[key];
-  const s = Array.isArray(v) ? v[0] : v;
-  return (s ?? '').trim();
-}
-
-/** Escapes the wildcards PostgREST's ilike filter would otherwise interpret. */
-function escapeLike(term: string): string {
-  return term.replace(/[%_,()]/g, '');
-}
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'GET') {
@@ -36,35 +31,25 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   try {
     requireAdmin(req);
 
-    const type = q(req, 'type') || 'applications';
+    const type = queryParam(req, 'type') || 'applications';
     if (type !== 'applications' && type !== 'messages') {
       throw new HttpError(400, 'Unknown type');
     }
 
     const table = type === 'applications' ? 'job_applications' : 'contact_messages';
-    const searchable =
-      type === 'applications'
-        ? ['full_name', 'email', 'mobile']
-        : ['full_name', 'mobile', 'subject', 'message'];
+    const searchable = type === 'applications' ? APPLICATION_SEARCH_COLUMNS : MESSAGE_SEARCH_COLUMNS;
 
-    const limit = Math.min(Number(q(req, 'limit')) || 200, MAX_LIMIT);
+    const limit = Math.min(Number(queryParam(req, 'limit')) || 200, MAX_LIMIT);
 
-    let query = supabaseAdmin()
-      .from(table)
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    const term = escapeLike(q(req, 'q'));
-    if (term) {
-      query = query.or(searchable.map((col) => `${col}.ilike.%${term}%`).join(','));
-    }
-
-    const from = q(req, 'from');
-    if (from) query = query.gte('created_at', `${from}T00:00:00.000Z`);
-
-    const to = q(req, 'to');
-    if (to) query = query.lte('created_at', `${to}T23:59:59.999Z`);
+    const query = applyFilters(
+      supabaseAdmin()
+        .from(table)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit),
+      req,
+      searchable,
+    );
 
     const { data, error } = await query;
     if (error) {

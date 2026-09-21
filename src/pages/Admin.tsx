@@ -32,6 +32,36 @@ const fmtDate = (iso: string) =>
 const fmtSize = (b: number) =>
   b < 1024 * 1024 ? `${Math.round(b / 1024)} KB` : `${(b / 1024 / 1024).toFixed(1)} MB`;
 
+interface BatchFile {
+  name: string;
+  size: number;
+  url: string | null;
+}
+
+/** Parallel downloads while zipping; enough to be quick without hammering Supabase. */
+const ZIP_CONCURRENCY = 4;
+
+/** Runs `worker` over `items`, at most `limit` at a time. */
+async function mapLimited<T>(items: T[], limit: number, worker: (item: T) => Promise<void>) {
+  let next = 0;
+  const run = async () => {
+    while (next < items.length) await worker(items[next++]);
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run));
+}
+
+function saveBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  // Revoke on the next tick; revoking synchronously can cancel the download.
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
 /* ------------------------------------------------------------------ */
 
 function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
@@ -161,6 +191,75 @@ export default function Admin() {
     }
   };
 
+  const [zipProgress, setZipProgress] = useState<{ done: number; total: number } | null>(null);
+
+  /** Downloads every CV matching the current search and dates as one ZIP. */
+  const downloadAllCvs = async () => {
+    setZipProgress({ done: 0, total: 0 });
+    try {
+      const params = new URLSearchParams();
+      if (search) params.set('q', search);
+      if (from) params.set('from', from);
+      if (to) params.set('to', to);
+
+      const res = await fetch(`/api/admin/cv-batch?${params}`);
+      if (res.status === 401) { setAuthed(false); return; }
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Failed');
+
+      const { files } = (await res.json()) as { files: BatchFile[] };
+      if (files.length === 0) {
+        toast.info('No CVs match these filters.');
+        return;
+      }
+
+      const contents: Record<string, Uint8Array> = {};
+      const missing: string[] = [];
+      let done = 0;
+      setZipProgress({ done, total: files.length });
+
+      await mapLimited(files, ZIP_CONCURRENCY, async (file) => {
+        try {
+          if (!file.url) throw new Error('not found');
+          const r = await fetch(file.url);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          contents[file.name] = new Uint8Array(await r.arrayBuffer());
+        } catch {
+          missing.push(file.name);
+        }
+        setZipProgress({ done: ++done, total: files.length });
+      });
+
+      if (Object.keys(contents).length === 0) {
+        throw new Error('None of the CVs could be downloaded. Please try again.');
+      }
+      if (missing.length) {
+        contents['_MISSING.txt'] = new TextEncoder().encode(
+          `These ${missing.length} CV(s) could not be downloaded:\r\n\r\n${missing.join('\r\n')}\r\n`,
+        );
+      }
+
+      // Loaded on demand so the zip code only ships to people who use it.
+      const { zipSync } = await import('fflate');
+      // level 0 = store only: PDF and DOCX are already compressed, so deflating
+      // again would cost time for no real saving.
+      const zip = zipSync(contents, { level: 0 });
+
+      const range = `${from || 'start'} to ${to || new Date().toISOString().slice(0, 10)}`;
+      saveBlob(new Blob([zip], { type: 'application/zip' }), `NXT CVs ${range}.zip`);
+
+      const saved = files.length - missing.length;
+      if (missing.length) {
+        toast.warning(`Downloaded ${saved} of ${files.length} CVs. See _MISSING.txt in the ZIP.`);
+      } else {
+        toast.success(`Downloaded ${saved} CV${saved === 1 ? '' : 's'}.`);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Could not download the CVs.');
+    } finally {
+      setZipProgress(null);
+    }
+  };
+
   const signOut = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => {});
     setAuthed(false);
@@ -234,10 +333,31 @@ export default function Admin() {
           </button>
         </div>
 
-        <p className="text-sm text-slate-500 mb-3">
-          {loading ? 'Loading…' : `${rows.length} record${rows.length === 1 ? '' : 's'}`}
-          {truncated && ' (showing the most recent 200 — narrow the dates to see more)'}
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <p className="text-sm text-slate-500">
+            {loading ? 'Loading…' : `${rows.length} record${rows.length === 1 ? '' : 's'}`}
+            {truncated && ' (showing the most recent 200 — narrow the dates to see more)'}
+          </p>
+
+          {tab === 'applications' && (
+            <button
+              onClick={downloadAllCvs}
+              disabled={!!zipProgress || loading || rows.length === 0}
+              className="px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm hover:opacity-90
+                         disabled:opacity-60 disabled:cursor-not-allowed transition"
+              style={{ background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' }}
+              title="Every CV matching the current search and dates, as one ZIP file"
+            >
+              {zipProgress
+                ? zipProgress.total
+                  ? `Downloading ${zipProgress.done} of ${zipProgress.total}…`
+                  : 'Preparing…'
+                : from || to
+                  ? 'Download these CVs (ZIP)'
+                  : 'Download all CVs (ZIP)'}
+            </button>
+          )}
+        </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {rows.length === 0 && !loading ? (
@@ -312,7 +432,8 @@ export default function Admin() {
 
         <p className="text-xs text-slate-400 mt-6">
           This page contains personal data. Download CVs only when needed, and don't forward the
-          download links — they expire after two minutes.
+          download links — they expire after two minutes. Treat downloaded ZIP files the same way:
+          store them somewhere access-controlled and delete them once you're done.
         </p>
       </div>
     </div>
