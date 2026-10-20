@@ -353,6 +353,18 @@ export default function Index() {
   },
 ];
 
+/**
+ * Cards kept out of the carousel for now. The entry above is left in place so
+ * showing it again is just removing its name from this list.
+ *
+ * Whatever is hidden here must also be hidden in HIDDEN_CARDS in
+ * src/seo/site.ts and dropped from the sr-only paragraph below, or the
+ * structured data advertises a card the page doesn't show.
+ */
+const HIDDEN_CARDS = ["Visa LBP"];
+
+const visibleCards = creditCards.filter((card) => !HIDDEN_CARDS.includes(card.name));
+
   const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
     const rect = el.getBoundingClientRect();
@@ -1017,8 +1029,8 @@ export default function Index() {
               phone's location or by scanning a QR code, split bills with friends
               and track who has paid, top up your account in seconds or share a
               top-up link, and check your balance from the login screen without
-              signing in. NXT also offers Visa Platinum Euro, Mastercard Titanium,
-              Visa Infinite and Visa LBP credit cards.
+              signing in. NXT also offers Visa Platinum Euro, Mastercard Titanium
+              and Visa Infinite credit cards.
             </p>
           </div>
         </div>
@@ -1213,8 +1225,8 @@ export default function Index() {
                     onPointerUp={handleCarouselPointerEnd}
                     onPointerCancel={handleCarouselPointerEnd}
                   >
-                    {creditCards.map((card, idx) => {
-                      const total = creditCards.length;
+                    {visibleCards.map((card, idx) => {
+                      const total = visibleCards.length;
                       const offset = (idx - currentCardIdx + total) % total;
                       let slot = 'is-hidden';
                       if (offset === 0) slot = 'is-center';
@@ -1278,7 +1290,7 @@ export default function Index() {
                     </button>
                   </div>
                   <div className="card-carousel-dots">
-                    {creditCards.map((card, idx) => (
+                    {visibleCards.map((card, idx) => (
                       <button
                         key={card.name}
                         className={`card-carousel-dot ${idx === currentCardIdx ? 'is-active' : ''}`}

@@ -174,6 +174,15 @@ const CREDIT_CARDS = [
   },
 ];
 
+/**
+ * Cards currently hidden on the homepage. Structured data must describe what a
+ * visitor can actually see, so anything hidden in HIDDEN_CARDS in
+ * src/pages/Index.tsx has to be hidden here too.
+ */
+const HIDDEN_CARDS = ['NXT Visa LBP'];
+
+const VISIBLE_CREDIT_CARDS = CREDIT_CARDS.filter((card) => !HIDDEN_CARDS.includes(card.name));
+
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
 
@@ -275,7 +284,7 @@ function mobileAppNode() {
 }
 
 function creditCardNodes() {
-  return CREDIT_CARDS.map((card, i) => ({
+  return VISIBLE_CREDIT_CARDS.map((card, i) => ({
     '@type': 'CreditCard',
     '@id': `${SITE_URL}/#card-${i}`,
     name: card.name,
