@@ -1,71 +1,33 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { inputClass } from '@/components/FormControls';
+import { inputClass, Field } from '@/components/FormControls';
+import { adminFetch, BRAND_GRADIENT, json, Unauthorized } from '@/components/admin/client';
+import { GhostButton, Modal, PrimaryButton } from '@/components/admin/Modal';
+import { SubmissionsPanel } from '@/components/admin/SubmissionsPanel';
+import { AwardsPanel } from '@/components/admin/AwardsPanel';
+import { UsersPanel } from '@/components/admin/UsersPanel';
+import { RolesPanel, type PageOption } from '@/components/admin/RolesPanel';
 
-type Tab = 'applications' | 'messages';
-
-interface Application {
-  id: string;
-  created_at: string;
-  full_name: string;
-  mobile: string;
-  email: string;
-  cv_path: string;
-  cv_filename: string;
-  cv_size_bytes: number;
-}
-
-interface Message {
-  id: string;
-  created_at: string;
-  full_name: string;
-  mobile: string;
-  subject: string;
-  message: string;
-}
-
-const fmtDate = (iso: string) =>
-  new Date(iso).toLocaleString('en-GB', {
-    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-  });
-
-const fmtSize = (b: number) =>
-  b < 1024 * 1024 ? `${Math.round(b / 1024)} KB` : `${(b / 1024 / 1024).toFixed(1)} MB`;
-
-interface BatchFile {
-  name: string;
-  size: number;
-  url: string | null;
-}
-
-/** Parallel downloads while zipping; enough to be quick without hammering Supabase. */
-const ZIP_CONCURRENCY = 4;
-
-/** Runs `worker` over `items`, at most `limit` at a time. */
-async function mapLimited<T>(items: T[], limit: number, worker: (item: T) => Promise<void>) {
-  let next = 0;
-  const run = async () => {
-    while (next < items.length) await worker(items[next++]);
+interface Me {
+  user: {
+    id: string;
+    email: string;
+    fullName: string;
+    roleName: string;
+    isBreakGlass: boolean;
   };
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run));
-}
-
-function saveBlob(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  // Revoke on the next tick; revoking synchronously can cancel the download.
-  setTimeout(() => URL.revokeObjectURL(url), 0);
+  pages: string[];
+  allPages: PageOption[];
 }
 
 /* ------------------------------------------------------------------ */
 
 function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // The shared password predates named accounts and still works, so that the
+  // first account can be created and a bad role edit can be undone.
+  const [shared, setShared] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -77,7 +39,7 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify(shared ? { password } : { email: email.trim(), password }),
       });
       if (!res.ok) {
         const b = await res.json().catch(() => ({}));
@@ -96,29 +58,49 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
       <form onSubmit={submit} className="bg-white rounded-lg shadow-lg p-8 w-full max-w-sm">
         <img src="/assets/images/logo-color.png" alt="NXT" className="h-10 w-auto mb-6" />
-        <h1 className="text-2xl font-bold mb-1" style={{ color: '#182C64' }}>Submissions</h1>
-        <p className="text-sm text-slate-500 mb-6">Enter the access password to continue.</p>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: '#182C64' }}>Admin</h1>
+        <p className="text-sm text-slate-500 mb-6">
+          {shared ? 'Enter the shared owner password.' : 'Sign in with your account.'}
+        </p>
 
+        {!shared && (
+          <div className="mb-3">
+            <label htmlFor="login-email" className="block text-xs font-medium mb-1 text-slate-600">Email</label>
+            <input
+              id="login-email" type="email" value={email} disabled={busy} autoFocus
+              autoComplete="username"
+              onChange={(e) => setEmail(e.target.value.replace(/\s/g, ''))}
+              className={inputClass} style={{ borderColor: error ? '#dc2626' : '#cbd5e1' }}
+            />
+          </div>
+        )}
+
+        <label htmlFor="login-password" className="block text-xs font-medium mb-1 text-slate-600">Password</label>
         <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          disabled={busy}
-          autoFocus
+          id="login-password" type="password" value={password} disabled={busy}
+          autoFocus={shared}
           autoComplete="current-password"
-          className={inputClass}
-          style={{ borderColor: error ? '#dc2626' : '#cbd5e1' }}
+          onChange={(e) => setPassword(e.target.value)}
+          className={inputClass} style={{ borderColor: error ? '#dc2626' : '#cbd5e1' }}
         />
         {error && <p className="text-xs text-red-600 mt-2" role="alert">{error}</p>}
 
         <button
           type="submit"
-          disabled={busy || !password}
+          disabled={busy || !password || (!shared && !email)}
           className="w-full mt-5 text-white font-bold text-sm py-2.5 rounded-lg shadow-md
                      disabled:opacity-60 disabled:cursor-not-allowed transition-all"
-          style={{ background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' }}
+          style={{ background: BRAND_GRADIENT }}
         >
           {busy ? 'Checking…' : 'Sign in'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => { setShared(!shared); setError(''); setPassword(''); }}
+          className="w-full mt-3 text-xs text-slate-500 hover:text-[#2E74EA] transition-colors"
+        >
+          {shared ? 'Sign in with an account instead' : 'Use the shared owner password'}
         </button>
       </form>
     </div>
@@ -127,315 +109,191 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 
 /* ------------------------------------------------------------------ */
 
-export default function Admin() {
-  const [authed, setAuthed] = useState(false);
-  const [checking, setChecking] = useState(true);
-  const [tab, setTab] = useState<Tab>('applications');
-  const [rows, setRows] = useState<(Application | Message)[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [truncated, setTruncated] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
+function ChangePasswordDialog({ onClose }: { onClose: () => void }) {
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
 
-  const [search, setSearch] = useState('');
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-
-  const load = useCallback(async (which: Tab, q: string, f: string, t: string) => {
-    setLoading(true);
+  const save = async () => {
+    if (newPassword.length < 10) return setError('New password must be at least 10 characters.');
+    if (newPassword !== confirm) return setError('The two new passwords do not match.');
+    setBusy(true);
+    setError('');
     try {
-      const params = new URLSearchParams({ type: which });
-      if (q) params.set('q', q);
-      if (f) params.set('from', f);
-      if (t) params.set('to', t);
-
-      const res = await fetch(`/api/admin/data?${params}`);
-      if (res.status === 401) { setAuthed(false); return; }
-      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Failed');
-
-      const body = await res.json();
-      setRows(body.rows);
-      setTruncated(body.truncated);
+      await adminFetch('/api/admin/me', {
+        method: 'POST',
+        body: json({ currentPassword, newPassword }),
+      });
+      toast.success('Password changed.');
+      onClose();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not load records.');
+      setError(err instanceof Error ? err.message : 'Could not change your password.');
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Modal
+      title="Change password"
+      onClose={onClose}
+      footer={
+        <>
+          <GhostButton onClick={onClose} disabled={busy}>Cancel</GhostButton>
+          <PrimaryButton onClick={save} disabled={busy}>
+            {busy ? 'Saving…' : 'Change password'}
+          </PrimaryButton>
+        </>
+      }
+    >
+      <Field label="Current password" htmlFor="cur-pw">
+        <input id="cur-pw" type="password" value={currentPassword} disabled={busy}
+          autoComplete="current-password"
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          className={inputClass} style={{ borderColor: '#cbd5e1' }} />
+      </Field>
+      <Field label="New password" htmlFor="new-pw" hint="At least 10 characters.">
+        <input id="new-pw" type="password" value={newPassword} disabled={busy}
+          autoComplete="new-password"
+          onChange={(e) => setNewPassword(e.target.value)}
+          className={inputClass} style={{ borderColor: '#cbd5e1' }} />
+      </Field>
+      <Field label="Confirm new password" htmlFor="confirm-pw">
+        <input id="confirm-pw" type="password" value={confirm} disabled={busy}
+          autoComplete="new-password"
+          onChange={(e) => setConfirm(e.target.value)}
+          className={inputClass} style={{ borderColor: '#cbd5e1' }} />
+      </Field>
+      {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
+    </Modal>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+export default function Admin() {
+  const [me, setMe] = useState<Me | null>(null);
+  const [checking, setChecking] = useState(true);
+  const [tab, setTab] = useState<string | null>(null);
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const loadMe = useCallback(async () => {
+    try {
+      const body = await adminFetch<Me>('/api/admin/me');
+      setMe(body);
+      // Keep the current tab if it is still permitted, else fall to the first.
+      setTab((prev) => (prev && body.pages.includes(prev) ? prev : body.pages[0] ?? null));
+    } catch {
+      setMe(null);
     } finally {
-      setLoading(false);
+      setChecking(false);
     }
   }, []);
 
-  // Probe once on mount: a valid cookie means we can skip the login screen.
-  useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/admin/data?type=applications&limit=1').catch(() => null);
-      const ok = !!res && res.status !== 401;
-      setAuthed(ok);
-      setChecking(false);
-      if (ok) load('applications', '', '', '');
-    })();
-  }, [load]);
+  useEffect(() => { void loadMe(); }, [loadMe]);
 
-  // Debounce so typing in the search box doesn't fire a request per keystroke.
-  useEffect(() => {
-    if (!authed) return;
-    const id = setTimeout(() => load(tab, search, from, to), 300);
-    return () => clearTimeout(id);
-  }, [authed, tab, search, from, to, load]);
-
-  const downloadCv = async (path: string) => {
-    try {
-      const res = await fetch(`/api/admin/cv?path=${encodeURIComponent(path)}`);
-      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Failed');
-      const { url } = await res.json();
-      window.open(url, '_blank', 'noopener');
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not open the CV.');
-    }
-  };
-
-  const [zipProgress, setZipProgress] = useState<{ done: number; total: number } | null>(null);
-
-  /** Downloads every CV matching the current search and dates as one ZIP. */
-  const downloadAllCvs = async () => {
-    setZipProgress({ done: 0, total: 0 });
-    try {
-      const params = new URLSearchParams();
-      if (search) params.set('q', search);
-      if (from) params.set('from', from);
-      if (to) params.set('to', to);
-
-      const res = await fetch(`/api/admin/cv-batch?${params}`);
-      if (res.status === 401) { setAuthed(false); return; }
-      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Failed');
-
-      const { files } = (await res.json()) as { files: BatchFile[] };
-      if (files.length === 0) {
-        toast.info('No CVs match these filters.');
-        return;
-      }
-
-      const contents: Record<string, Uint8Array> = {};
-      const missing: string[] = [];
-      let done = 0;
-      setZipProgress({ done, total: files.length });
-
-      await mapLimited(files, ZIP_CONCURRENCY, async (file) => {
-        try {
-          if (!file.url) throw new Error('not found');
-          const r = await fetch(file.url);
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          contents[file.name] = new Uint8Array(await r.arrayBuffer());
-        } catch {
-          missing.push(file.name);
-        }
-        setZipProgress({ done: ++done, total: files.length });
-      });
-
-      if (Object.keys(contents).length === 0) {
-        throw new Error('None of the CVs could be downloaded. Please try again.');
-      }
-      if (missing.length) {
-        contents['_MISSING.txt'] = new TextEncoder().encode(
-          `These ${missing.length} CV(s) could not be downloaded:\r\n\r\n${missing.join('\r\n')}\r\n`,
-        );
-      }
-
-      // Loaded on demand so the zip code only ships to people who use it.
-      const { zipSync } = await import('fflate');
-      // level 0 = store only: PDF and DOCX are already compressed, so deflating
-      // again would cost time for no real saving.
-      const zip = zipSync(contents, { level: 0 });
-
-      const range = `${from || 'start'} to ${to || new Date().toISOString().slice(0, 10)}`;
-      saveBlob(new Blob([zip], { type: 'application/zip' }), `NXT CVs ${range}.zip`);
-
-      const saved = files.length - missing.length;
-      if (missing.length) {
-        toast.warning(`Downloaded ${saved} of ${files.length} CVs. See _MISSING.txt in the ZIP.`);
-      } else {
-        toast.success(`Downloaded ${saved} CV${saved === 1 ? '' : 's'}.`);
-      }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not download the CVs.');
-    } finally {
-      setZipProgress(null);
-    }
-  };
+  const onUnauthorized = useCallback(() => {
+    setMe(null);
+    toast.error('Your session has expired. Please sign in again.');
+  }, []);
 
   const signOut = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => {});
-    setAuthed(false);
-    setRows([]);
+    setMe(null);
+    setTab(null);
   };
 
   if (checking) {
-    return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-400">Loading…</div>;
-  }
-  if (!authed) {
-    return <LoginScreen onSuccess={() => { setAuthed(true); load(tab, search, from, to); }} />;
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-400">
+        Loading…
+      </div>
+    );
   }
 
-  const switchTab = (next: Tab) => {
-    setTab(next);
-    setExpanded(null);
-    setRows([]);
-  };
+  if (!me) {
+    return <LoginScreen onSuccess={() => { setChecking(true); void loadMe(); }} />;
+  }
+
+  const visible = me.allPages.filter((p) => me.pages.includes(p.key));
 
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <img src="/assets/images/logo-color.png" alt="NXT" className="h-8 w-auto" />
-          <button onClick={signOut} className="text-sm text-slate-500 hover:text-[#2E74EA] transition-colors">
-            Sign out
-          </button>
+          <div className="flex items-center gap-3 text-sm min-w-0">
+            <span className="text-slate-500 truncate hidden sm:inline">
+              {me.user.fullName} · {me.user.roleName}
+            </span>
+            {!me.user.isBreakGlass && (
+              <button
+                onClick={() => setChangingPassword(true)}
+                className="text-slate-500 hover:text-[#2E74EA] transition-colors whitespace-nowrap"
+              >
+                Change password
+              </button>
+            )}
+            <button onClick={signOut} className="text-slate-500 hover:text-[#2E74EA] transition-colors">
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-        <div className="flex gap-2 mb-5">
-          {(['applications', 'messages'] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => switchTab(t)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                tab === t ? 'text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-100'
-              }`}
-              style={tab === t ? { background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' } : undefined}
-            >
-              {t === 'applications' ? 'Job applications' : 'Contact messages'}
-            </button>
-          ))}
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-4 mb-4 grid gap-3 sm:grid-cols-[1fr_auto_auto_auto] sm:items-end">
-          <div>
-            <label htmlFor="search" className="block text-xs font-medium mb-1 text-slate-600">Search</label>
-            <input
-              id="search" type="search" value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder={tab === 'applications' ? 'Name, email or mobile' : 'Name, subject or message'}
-              className={inputClass} style={{ borderColor: '#cbd5e1' }}
-            />
+        {me.user.isBreakGlass && (
+          <div className="mb-5 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+            You're signed in with the shared owner password. Create a personal account under{' '}
+            <strong>Users</strong> and sign in with that instead — shared passwords can't be traced
+            to a person.
           </div>
-          <div>
-            <label htmlFor="from" className="block text-xs font-medium mb-1 text-slate-600">From</label>
-            <input id="from" type="date" value={from} onChange={(e) => setFrom(e.target.value)}
-              className={inputClass} style={{ borderColor: '#cbd5e1' }} />
+        )}
+
+        {visible.length === 0 ? (
+          <div className="bg-white rounded-lg shadow p-8 text-center text-slate-500">
+            Your role has no pages assigned yet. Ask an administrator to grant you access.
           </div>
-          <div>
-            <label htmlFor="to" className="block text-xs font-medium mb-1 text-slate-600">To</label>
-            <input id="to" type="date" value={to} onChange={(e) => setTo(e.target.value)}
-              className={inputClass} style={{ borderColor: '#cbd5e1' }} />
-          </div>
-          <button
-            onClick={() => { setSearch(''); setFrom(''); setTo(''); }}
-            className="px-4 py-2 rounded-lg text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
-          >
-            Clear
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-          <p className="text-sm text-slate-500">
-            {loading ? 'Loading…' : `${rows.length} record${rows.length === 1 ? '' : 's'}`}
-            {truncated && ' (showing the most recent 200 — narrow the dates to see more)'}
-          </p>
-
-          {tab === 'applications' && (
-            <button
-              onClick={downloadAllCvs}
-              disabled={!!zipProgress || loading || rows.length === 0}
-              className="px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm hover:opacity-90
-                         disabled:opacity-60 disabled:cursor-not-allowed transition"
-              style={{ background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' }}
-              title="Every CV matching the current search and dates, as one ZIP file"
-            >
-              {zipProgress
-                ? zipProgress.total
-                  ? `Downloading ${zipProgress.done} of ${zipProgress.total}…`
-                  : 'Preparing…'
-                : from || to
-                  ? 'Download these CVs (ZIP)'
-                  : 'Download all CVs (ZIP)'}
-            </button>
-          )}
-        </div>
-
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          {rows.length === 0 && !loading ? (
-            <p className="p-8 text-center text-slate-400">Nothing to show.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-600">
-                  <tr>
-                    <th className="text-left font-semibold px-4 py-3 whitespace-nowrap">Received</th>
-                    <th className="text-left font-semibold px-4 py-3">Name</th>
-                    <th className="text-left font-semibold px-4 py-3 whitespace-nowrap">Mobile</th>
-                    <th className="text-left font-semibold px-4 py-3">
-                      {tab === 'applications' ? 'Email' : 'Subject'}
-                    </th>
-                    <th className="text-left font-semibold px-4 py-3">
-                      {tab === 'applications' ? 'CV' : ''}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row) => {
-                    const isApp = tab === 'applications';
-                    const app = row as Application;
-                    const msg = row as Message;
-                    const open = expanded === row.id;
-                    return (
-                      <tr
-                        key={row.id}
-                        className={`border-t border-slate-100 align-top ${!isApp ? 'cursor-pointer hover:bg-slate-50' : ''}`}
-                        onClick={!isApp ? () => setExpanded(open ? null : row.id) : undefined}
-                      >
-                        <td className="px-4 py-3 whitespace-nowrap text-slate-500">{fmtDate(row.created_at)}</td>
-                        <td className="px-4 py-3 font-medium" style={{ color: '#182C64' }}>{row.full_name}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          <a href={`tel:${row.mobile}`} className="text-[#2E74EA] hover:underline"
-                             onClick={(e) => e.stopPropagation()}>{row.mobile}</a>
-                        </td>
-                        <td className="px-4 py-3">
-                          {isApp ? (
-                            <a href={`mailto:${app.email}`} className="text-[#2E74EA] hover:underline">{app.email}</a>
-                          ) : (
-                            <>
-                              <div className="font-medium text-slate-700">{msg.subject}</div>
-                              <div className={`text-slate-600 mt-1 ${open ? 'whitespace-pre-wrap' : 'truncate max-w-md'}`}>
-                                {msg.message}
-                              </div>
-                              {!open && <span className="text-xs text-[#2E74EA]">click to expand</span>}
-                            </>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          {isApp && (
-                            <button
-                              onClick={() => downloadCv(app.cv_path)}
-                              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white shadow-sm hover:opacity-90 transition"
-                              style={{ background: 'linear-gradient(80deg, #182C64 0%, #2E74EA 100%)' }}
-                              title={`${app.cv_filename} (${fmtSize(app.cv_size_bytes)})`}
-                            >
-                              Download CV
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+        ) : (
+          <>
+            <div className="flex flex-wrap gap-2 mb-5">
+              {visible.map((p) => (
+                <button
+                  key={p.key}
+                  onClick={() => setTab(p.key)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                    tab === p.key ? 'text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-100'
+                  }`}
+                  style={tab === p.key ? { background: BRAND_GRADIENT } : undefined}
+                >
+                  {p.label}
+                </button>
+              ))}
             </div>
-          )}
-        </div>
 
-        <p className="text-xs text-slate-400 mt-6">
-          This page contains personal data. Download CVs only when needed, and don't forward the
-          download links — they expire after two minutes. Treat downloaded ZIP files the same way:
-          store them somewhere access-controlled and delete them once you're done.
-        </p>
+            {/* key={tab} remounts on switch so each panel starts from a clean state. */}
+            {tab === 'applications' && (
+              <SubmissionsPanel key="applications" type="applications" onUnauthorized={onUnauthorized} />
+            )}
+            {tab === 'messages' && (
+              <SubmissionsPanel key="messages" type="messages" onUnauthorized={onUnauthorized} />
+            )}
+            {tab === 'awards' && <AwardsPanel onUnauthorized={onUnauthorized} />}
+            {tab === 'users' && <UsersPanel onUnauthorized={onUnauthorized} />}
+            {tab === 'roles' && (
+              <RolesPanel
+                allPages={me.allPages}
+                onUnauthorized={onUnauthorized}
+                // A role edit can change what the signed-in user may see.
+                onRolesChanged={() => void loadMe()}
+              />
+            )}
+          </>
+        )}
       </div>
+
+      {changingPassword && <ChangePasswordDialog onClose={() => setChangingPassword(false)} />}
     </div>
   );
 }

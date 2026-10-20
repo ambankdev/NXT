@@ -20,7 +20,7 @@ import {
   fail,
   supabaseAdmin,
 } from '../_lib/shared.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
+import { requirePage } from '../_lib/adminAuth.js';
 import { APPLICATION_SEARCH_COLUMNS, applyFilters } from '../_lib/adminQuery.js';
 
 /** CVs are up to 3 MB each and all held in browser memory while zipping. */
@@ -63,7 +63,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   try {
-    requireAdmin(req);
+    await requirePage(req, 'applications');
     const supabase = supabaseAdmin();
 
     // One row over the cap tells us the batch is too big without a separate count.

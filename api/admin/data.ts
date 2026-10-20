@@ -11,7 +11,7 @@ import {
   fail,
   supabaseAdmin,
 } from '../_lib/shared.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
+import { requirePage } from '../_lib/adminAuth.js';
 import {
   APPLICATION_SEARCH_COLUMNS,
   MESSAGE_SEARCH_COLUMNS,
@@ -29,12 +29,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   try {
-    requireAdmin(req);
-
     const type = queryParam(req, 'type') || 'applications';
     if (type !== 'applications' && type !== 'messages') {
       throw new HttpError(400, 'Unknown type');
     }
+    // The two tabs are separate permissions, so the check follows the type.
+    await requirePage(req, type);
 
     const table = type === 'applications' ? 'job_applications' : 'contact_messages';
     const searchable = type === 'applications' ? APPLICATION_SEARCH_COLUMNS : MESSAGE_SEARCH_COLUMNS;

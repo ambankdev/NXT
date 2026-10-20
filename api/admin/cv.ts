@@ -12,7 +12,7 @@ import {
   fail,
   supabaseAdmin,
 } from '../_lib/shared.js';
-import { requireAdmin } from '../_lib/adminAuth.js';
+import { requirePage } from '../_lib/adminAuth.js';
 
 const LINK_TTL_SECONDS = 120;
 const BUCKET = process.env.SUPABASE_CV_BUCKET || 'cvs';
@@ -25,7 +25,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   try {
-    requireAdmin(req);
+    await requirePage(req, 'applications');
 
     const raw = req.query?.path;
     const path = (Array.isArray(raw) ? raw[0] : raw ?? '').trim();
