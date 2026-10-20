@@ -59,7 +59,7 @@ export interface RouteSeo {
 export const ROUTES: RouteSeo[] = [
   {
     path: '/',
-    title: 'NXT | Digital Wallet, Instant Transfers & Credit Cards',
+    title: 'NXT',
     description:
       'Send money by location or QR, split bills, top up in seconds and check your balance without logging in. Explore NXT Visa and Mastercard credit cards.',
     lastmod: '2026-08-06',
