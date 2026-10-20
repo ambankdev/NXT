@@ -19,7 +19,9 @@ import {
   queryParam,
 } from '../_lib/adminQuery.js';
 
-const MAX_LIMIT = 500;
+/** Offered in the UI; anything else falls back to the default. */
+export const PAGE_SIZES = [25, 50, 100] as const;
+const DEFAULT_PAGE_SIZE = 25;
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'GET') {
@@ -39,25 +41,38 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     const table = type === 'applications' ? 'job_applications' : 'contact_messages';
     const searchable = type === 'applications' ? APPLICATION_SEARCH_COLUMNS : MESSAGE_SEARCH_COLUMNS;
 
-    const limit = Math.min(Number(queryParam(req, 'limit')) || 200, MAX_LIMIT);
+    const requestedSize = Number(queryParam(req, 'pageSize'));
+    const pageSize = (PAGE_SIZES as readonly number[]).includes(requestedSize)
+      ? requestedSize
+      : DEFAULT_PAGE_SIZE;
+    const page = Math.max(1, Math.floor(Number(queryParam(req, 'page')) || 1));
+    const offset = (page - 1) * pageSize;
 
+    // count: 'exact' returns the number of rows matching the filters, not just
+    // the page, which is what lets the UI show "page 2 of 9".
     const query = applyFilters(
       supabaseAdmin()
         .from(table)
-        .select('*')
+        .select('*', { count: 'exact' })
         .order('created_at', { ascending: false })
-        .limit(limit),
+        .range(offset, offset + pageSize - 1),
       req,
       searchable,
     );
 
-    const { data, error } = await query;
+    const { data, error, count } = await query;
     if (error) {
+      // Asking for a page past the end is a client mistake, not a server fault;
+      // PostgREST reports it as an unsatisfiable range.
+      if (error.code === 'PGRST103') {
+        res.status(200).json({ rows: [], total: 0, page, pageSize });
+        return;
+      }
       console.error('Admin query failed:', error);
       throw new HttpError(502, 'Could not load records.');
     }
 
-    res.status(200).json({ rows: data ?? [], truncated: (data?.length ?? 0) >= limit });
+    res.status(200).json({ rows: data ?? [], total: count ?? 0, page, pageSize });
   } catch (err) {
     fail(res, err);
   }

@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { inputClass } from '@/components/FormControls';
 import { adminFetch, BRAND_GRADIENT, fmtDate, Unauthorized } from './client';
 import { InlineLoading, LoadingBlock } from './Spinner';
+import { Pagination } from './Pagination';
 
 interface Application {
   id: string;
@@ -67,28 +68,30 @@ export function SubmissionsPanel({
   const [loading, setLoading] = useState(true);
   /** False until the first response lands, which is what picks the spinner. */
   const [loaded, setLoaded] = useState(false);
-  const [truncated, setTruncated] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const [total, setTotal] = useState(0);
   const [zipProgress, setZipProgress] = useState<{ done: number; total: number } | null>(null);
 
   const isApp = type === 'applications';
 
-  const load = useCallback(async (q: string, f: string, t: string) => {
+  const load = useCallback(async (q: string, f: string, t: string, p: number, size: number) => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ type });
+      const params = new URLSearchParams({ type, page: String(p), pageSize: String(size) });
       if (q) params.set('q', q);
       if (f) params.set('from', f);
       if (t) params.set('to', t);
 
-      const body = await adminFetch<{ rows: (Application | Message)[]; truncated: boolean }>(
+      const body = await adminFetch<{ rows: (Application | Message)[]; total: number }>(
         `/api/admin/data?${params}`,
       );
       setRows(body.rows);
-      setTruncated(body.truncated);
+      setTotal(body.total);
     } catch (err) {
       if (err instanceof Unauthorized) return onUnauthorized();
       toast.error(err instanceof Error ? err.message : 'Could not load records.');
@@ -104,13 +107,20 @@ export function SubmissionsPanel({
     setFrom('');
     setTo('');
     setExpanded(null);
+    setPage(1);
   }, [type]);
+
+  // Any filter change re-pages from the start: staying on page 5 of a result
+  // set that just shrank to two pages would show an empty table.
+  useEffect(() => {
+    setPage(1);
+  }, [search, from, to, pageSize]);
 
   // Debounce so typing in the search box doesn't fire a request per keystroke.
   useEffect(() => {
-    const id = setTimeout(() => void load(search, from, to), 300);
+    const id = setTimeout(() => void load(search, from, to, page, pageSize), 300);
     return () => clearTimeout(id);
-  }, [search, from, to, load]);
+  }, [search, from, to, page, pageSize, load]);
 
   const downloadCv = async (path: string) => {
     try {
@@ -210,7 +220,7 @@ export function SubmissionsPanel({
             className={inputClass} style={{ borderColor: '#cbd5e1' }} />
         </div>
         <button
-          onClick={() => { setSearch(''); setFrom(''); setTo(''); }}
+          onClick={() => { setSearch(''); setFrom(''); setTo(''); setPage(1); }}
           className="px-4 py-2 rounded-lg text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
         >
           Clear
@@ -222,19 +232,20 @@ export function SubmissionsPanel({
           <InlineLoading />
         ) : (
           <p className="text-sm text-slate-500">
-            {`${rows.length} record${rows.length === 1 ? '' : 's'}`}
-            {truncated && ' (showing the most recent 200 — narrow the dates to see more)'}
+            {`${total} record${total === 1 ? '' : 's'}`}
           </p>
         )}
 
         {isApp && (
           <button
             onClick={downloadAllCvs}
-            disabled={!!zipProgress || loading || rows.length === 0}
+            // Keyed off the filtered total, not this page: the ZIP covers every
+            // match, not just the rows currently in view.
+            disabled={!!zipProgress || loading || total === 0}
             className="px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm hover:opacity-90
                        disabled:opacity-60 disabled:cursor-not-allowed transition"
             style={{ background: BRAND_GRADIENT }}
-            title="Every CV matching the current search and dates, as one ZIP file"
+            title="Every CV matching the current search and dates, across all pages, as one ZIP file"
           >
             {zipProgress
               ? zipProgress.total
@@ -316,6 +327,17 @@ export function SubmissionsPanel({
           </div>
         )}
       </div>
+
+      {loaded && total > 0 && (
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          total={total}
+          disabled={loading}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      )}
 
       <p className="text-xs text-slate-400 mt-6">
         This page contains personal data. Download CVs only when needed, and don't forward the
