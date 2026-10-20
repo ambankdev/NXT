@@ -4,6 +4,7 @@ import { inputClass, Field } from '@/components/FormControls';
 import { validateEmail } from '@/lib/forms';
 import { adminFetch, fmtDate, json, Unauthorized } from './client';
 import { ConfirmDialog, GhostButton, Modal, PrimaryButton } from './Modal';
+import { InlineLoading, LoadingBlock } from './Spinner';
 
 interface User {
   id: string;
@@ -142,6 +143,8 @@ export function UsersPanel({ onUnauthorized }: { onUnauthorized: () => void }) {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<RoleOption[]>([]);
   const [loading, setLoading] = useState(true);
+  /** False until the first response lands, which is what picks the spinner. */
+  const [loaded, setLoaded] = useState(false);
   const [editing, setEditing] = useState<User | null>(null);
   const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<User | null>(null);
@@ -163,6 +166,7 @@ export function UsersPanel({ onUnauthorized }: { onUnauthorized: () => void }) {
       toast.error(err instanceof Error ? err.message : 'Could not load users.');
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [onUnauthorized]);
 
@@ -213,21 +217,28 @@ export function UsersPanel({ onUnauthorized }: { onUnauthorized: () => void }) {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <p className="text-sm text-slate-500">
-          {loading ? 'Loading…' : `${users.length} user${users.length === 1 ? '' : 's'}`}
-        </p>
+        {loading ? (
+          <InlineLoading />
+        ) : (
+          <p className="text-sm text-slate-500">
+            {`${users.length} user${users.length === 1 ? '' : 's'}`}
+          </p>
+        )}
         <PrimaryButton onClick={() => setAdding(true)} disabled={roles.length === 0}>
           New user
         </PrimaryButton>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {users.length === 0 && !loading ? (
+        {!loaded ? (
+          <LoadingBlock />
+        ) : users.length === 0 ? (
           <p className="p-8 text-center text-slate-400">
             No accounts yet. Create one so you can stop using the shared password.
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          // Dimmed rather than replaced while reloading after a change.
+          <div className={`overflow-x-auto transition-opacity ${loading ? 'opacity-50' : ''}`}>
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-slate-600">
                 <tr>

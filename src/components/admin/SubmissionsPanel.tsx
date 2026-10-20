@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { inputClass } from '@/components/FormControls';
 import { adminFetch, BRAND_GRADIENT, fmtDate, Unauthorized } from './client';
+import { InlineLoading, LoadingBlock } from './Spinner';
 
 interface Application {
   id: string;
@@ -64,6 +65,8 @@ export function SubmissionsPanel({
 }) {
   const [rows, setRows] = useState<(Application | Message)[]>([]);
   const [loading, setLoading] = useState(true);
+  /** False until the first response lands, which is what picks the spinner. */
+  const [loaded, setLoaded] = useState(false);
   const [truncated, setTruncated] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -91,6 +94,7 @@ export function SubmissionsPanel({
       toast.error(err instanceof Error ? err.message : 'Could not load records.');
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [type, onUnauthorized]);
 
@@ -214,10 +218,14 @@ export function SubmissionsPanel({
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <p className="text-sm text-slate-500">
-          {loading ? 'Loading…' : `${rows.length} record${rows.length === 1 ? '' : 's'}`}
-          {truncated && ' (showing the most recent 200 — narrow the dates to see more)'}
-        </p>
+        {loading ? (
+          <InlineLoading />
+        ) : (
+          <p className="text-sm text-slate-500">
+            {`${rows.length} record${rows.length === 1 ? '' : 's'}`}
+            {truncated && ' (showing the most recent 200 — narrow the dates to see more)'}
+          </p>
+        )}
 
         {isApp && (
           <button
@@ -240,10 +248,14 @@ export function SubmissionsPanel({
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {rows.length === 0 && !loading ? (
+        {!loaded ? (
+          <LoadingBlock />
+        ) : rows.length === 0 ? (
           <p className="p-8 text-center text-slate-400">Nothing to show.</p>
         ) : (
-          <div className="overflow-x-auto">
+          // Dimmed rather than replaced while refiltering, so the rows don't
+          // vanish on every keystroke in the search box.
+          <div className={`overflow-x-auto transition-opacity ${loading ? 'opacity-50' : ''}`}>
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-slate-600">
                 <tr>

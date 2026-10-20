@@ -4,6 +4,7 @@ import { inputClass, Field } from '@/components/FormControls';
 import { fileToBase64 } from '@/lib/forms';
 import { adminFetch, fmtDay, json, Unauthorized } from './client';
 import { ConfirmDialog, GhostButton, Modal, PrimaryButton } from './Modal';
+import { InlineLoading, LoadingBlock } from './Spinner';
 
 interface Award {
   id: string;
@@ -182,6 +183,8 @@ function AwardForm({
 export function AwardsPanel({ onUnauthorized }: { onUnauthorized: () => void }) {
   const [awards, setAwards] = useState<Award[]>([]);
   const [loading, setLoading] = useState(true);
+  /** False until the first response lands, which is what picks the spinner. */
+  const [loaded, setLoaded] = useState(false);
   const [editing, setEditing] = useState<Award | null>(null);
   const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<Award | null>(null);
@@ -197,6 +200,7 @@ export function AwardsPanel({ onUnauthorized }: { onUnauthorized: () => void }) 
       toast.error(err instanceof Error ? err.message : 'Could not load awards.');
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [onUnauthorized]);
 
@@ -233,19 +237,26 @@ export function AwardsPanel({ onUnauthorized }: { onUnauthorized: () => void }) 
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <p className="text-sm text-slate-500">
-          {loading ? 'Loading…' : `${awards.length} award${awards.length === 1 ? '' : 's'}`}
-        </p>
+        {loading ? (
+          <InlineLoading />
+        ) : (
+          <p className="text-sm text-slate-500">
+            {`${awards.length} award${awards.length === 1 ? '' : 's'}`}
+          </p>
+        )}
         <PrimaryButton onClick={() => setAdding(true)}>Add award</PrimaryButton>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {awards.length === 0 && !loading ? (
+        {!loaded ? (
+          <LoadingBlock />
+        ) : awards.length === 0 ? (
           <p className="p-8 text-center text-slate-400">
             No awards yet. Use “Add award” to create the first one.
           </p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          // Dimmed rather than replaced while reloading after a save or delete.
+          <ul className={`divide-y divide-slate-100 transition-opacity ${loading ? 'opacity-50' : ''}`}>
             {awards.map((a) => (
               <li key={a.id} className="flex items-start gap-4 p-4">
                 <div className="w-20 h-16 rounded border border-slate-200 bg-slate-50 flex items-center

@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { inputClass, Field } from '@/components/FormControls';
 import { adminFetch, json, Unauthorized } from './client';
 import { ConfirmDialog, GhostButton, Modal, PrimaryButton } from './Modal';
+import { InlineLoading, LoadingBlock } from './Spinner';
 
 export interface PageOption {
   key: string;
@@ -135,6 +136,8 @@ export function RolesPanel({
 }) {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
+  /** False until the first response lands, which is what picks the spinner. */
+  const [loaded, setLoaded] = useState(false);
   const [editing, setEditing] = useState<Role | null>(null);
   const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<Role | null>(null);
@@ -152,6 +155,7 @@ export function RolesPanel({
       toast.error(err instanceof Error ? err.message : 'Could not load roles.');
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [onUnauthorized]);
 
@@ -190,14 +194,20 @@ export function RolesPanel({
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <p className="text-sm text-slate-500">
-          {loading ? 'Loading…' : `${roles.length} role${roles.length === 1 ? '' : 's'}`}
-        </p>
+        {loading ? (
+          <InlineLoading />
+        ) : (
+          <p className="text-sm text-slate-500">
+            {`${roles.length} role${roles.length === 1 ? '' : 's'}`}
+          </p>
+        )}
         <PrimaryButton onClick={() => setAdding(true)}>New role</PrimaryButton>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <ul className="divide-y divide-slate-100">
+        {!loaded ? <LoadingBlock /> : (
+        // Dimmed rather than replaced while reloading after a change.
+        <ul className={`divide-y divide-slate-100 transition-opacity ${loading ? 'opacity-50' : ''}`}>
           {roles.map((r) => (
             <li key={r.id} className="flex items-start gap-4 p-4">
               <div className="min-w-0 flex-1">
@@ -237,6 +247,7 @@ export function RolesPanel({
             </li>
           ))}
         </ul>
+        )}
       </div>
 
       <p className="text-xs text-slate-400 mt-6">

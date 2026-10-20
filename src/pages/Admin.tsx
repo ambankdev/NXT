@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { inputClass, Field } from '@/components/FormControls';
 import { adminFetch, BRAND_GRADIENT, json, Unauthorized } from '@/components/admin/client';
 import { GhostButton, Modal, PrimaryButton } from '@/components/admin/Modal';
+import { LoadingBlock, Spinner } from '@/components/admin/Spinner';
 import { SubmissionsPanel } from '@/components/admin/SubmissionsPanel';
 import { AwardsPanel } from '@/components/admin/AwardsPanel';
 import { UsersPanel } from '@/components/admin/UsersPanel';
@@ -89,9 +90,11 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
           type="submit"
           disabled={busy || !password || (!shared && !email)}
           className="w-full mt-5 text-white font-bold text-sm py-2.5 rounded-lg shadow-md
-                     disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                     disabled:opacity-60 disabled:cursor-not-allowed transition-all
+                     inline-flex items-center justify-center gap-2"
           style={{ background: BRAND_GRADIENT }}
         >
+          {busy && <Spinner variant="onBrand" className="h-4 w-4 border-2" />}
           {busy ? 'Checking…' : 'Sign in'}
         </button>
 
@@ -206,8 +209,8 @@ export default function Admin() {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-400">
-        Loading…
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <LoadingBlock label="Loading…" />
       </div>
     );
   }
